@@ -169,7 +169,7 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/">
-            <Signator
+            <Signator style={{ textAlign: "center", fontSize: "16px" }}
               mainnetProvider={mainnetProvider}
               injectedProvider={injectedProvider}
               address={address}
@@ -195,8 +195,8 @@ function App() {
           <a href="https://github.com/CRE8RDAO/bb" target="_blank">
             <GithubOutlined />
           </a>
-         {cre8rScore ? <span>Your CRE8R Holdings {cre8rScore}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
-         {beetsScore ? <span>Your FBEETS voting power {beetsScore}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+         {cre8rScore ? <span>Your CRE8R Holdings across Fantom Pools and Vaults ${cre8rScore*0.42}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+         {beetsScore ? <span>Your $FBEETS voting power {beetsScore}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
           <a href="https://cre8r.vip/boosted-bribes/" target="_blank">
             🧱 Boosted Bribes™ {" "}
           </a>

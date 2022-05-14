@@ -48,7 +48,7 @@ function BribeExplainer (props) {
   const {cre8rScore,beetsScore} = useBribe(props.injectedProvider, address);
 
   return (
-    <Card>
+    <Card style={{ textAlign: "center", fontSize: "16px" }}>
       {beetsScore ? (
         <span>For New Voters: LP at least ${amountToLpToGetBasicBoosted(beetsScore)} To recieve Basic Boosted Bribe amount: {calculateBasicBoosted(beetsScore)}</span>
       ) : (
