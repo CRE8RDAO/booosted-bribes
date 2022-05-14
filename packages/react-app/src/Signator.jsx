@@ -50,7 +50,7 @@ function BribeExplainer (props) {
   return (
     <Card style={{ textAlign: "center", fontSize: "16px" }}>
       {beetsScore ? (
-        <span>For New Voters: LP at least ${amountToLpToGetBasicBoosted(beetsScore)} To recieve Basic Boosted Bribe amount: {calculateBasicBoosted(beetsScore)}</span>
+        <span>For New Voters: LP at least ${amountToLpToGetBasicBoosted(beetsScore)} with {address}<br></br> To recieve Basic Boosted Bribe amount: {calculateBasicBoosted(beetsScore)}</span>
       ) : (
         <span> Connect your $FBEETS wallet to calculate your bribe payment options.</span>
       )}
