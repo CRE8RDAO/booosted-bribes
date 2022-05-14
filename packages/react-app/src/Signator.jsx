@@ -49,11 +49,15 @@ function BribeExplainer (props) {
 
   return (
     <Card style={{ textAlign: "center", fontSize: "16px" }}>
+      <h1>For new voters it all starts with Basic Boosted</h1>
       {beetsScore ? (
         <span>For New Voters: LP at least ${amountToLpToGetBasicBoosted(beetsScore)} with {address}<br></br> To recieve Basic Boosted Bribe amount: {calculateBasicBoosted(beetsScore)}</span>
       ) : (
         <span> Connect your $FBEETS wallet to calculate your bribe payment options.</span>
       )}
+      <hr></hr>
+      <h3>This App is WIP: For info about the higher boosts pls check:  </h3><a href="https://cre8r.vip/boosted-bribes/" target="_blank">
+            🧱 Boosted Bribes™ {" "} </a>
     </Card>
   )
 }
