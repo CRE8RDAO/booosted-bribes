@@ -92,7 +92,19 @@ const strategies = {
           "uniPairAddress": null,
           "weightDecimals": 0
         },
+      
       },
+      
+    {
+      "name": "erc20-balance-of-weighted",
+      "network": "250",
+      "params": {
+        "symbol": "fbeets",
+        "weight": 1,
+        "address": "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1",
+        "decimals": 18
+      }
+    }
   ]
 }
 

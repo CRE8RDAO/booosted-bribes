@@ -88,7 +88,7 @@ function App() {
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const address = useUserAddress(injectedProvider);
 
-  const {score} = useBribe(injectedProvider, address);
+  const {cre8rScore,beetsScore} = useBribe(injectedProvider, address);
 
   const loadWeb3Modal = useCallback(async () => {
     const provider = await web3Modal.connect();
@@ -195,7 +195,8 @@ function App() {
           <a href="https://github.com/CRE8RDAO/bb" target="_blank">
             <GithubOutlined />
           </a>
-         {score ? <span>Your CRE8R Holdings {score}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+         {cre8rScore ? <span>Your CRE8R Holdings {cre8rScore}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+         {beetsScore ? <span>Your FBEETS voting power {beetsScore}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
           <a href="https://cre8r.vip/boosted-bribes/" target="_blank">
             🧱 Boosted Bribes™ {" "}
           </a>
