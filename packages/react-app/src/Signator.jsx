@@ -78,6 +78,9 @@ function BribeExplainer (props) {
       <a href='https://cre8r.vip/boosted-bribes/' target='_blank'>
         🧱 Boosted Bribes™{" "}
       </a>
+      Also check out  <a href='' target='_blank'>
+      www.beetswars.live{" "}
+      </a> to compare Bribe offers!
     </Card>
   )
 }
