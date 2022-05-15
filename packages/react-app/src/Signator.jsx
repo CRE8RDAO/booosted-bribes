@@ -61,7 +61,7 @@ function BribeExplainer (props) {
       <p>
         {beetsScore ? (
           <span>
-            For New Voters: LP at least ${Math.round(amountToLpToGetBasicBoosted(beetsScore))} with {address}
+            For New Voters: LP at least <Text type="success">${Math.round(amountToLpToGetBasicBoosted(beetsScore))}</Text> with {address}
             <br></br> To receive <Text type="success"> Basic Boosted </Text> Bribe amount: <Text type="success">${Math.round(calculateBasicBoosted(beetsScore))}</Text>
           </span>
         ) : (
@@ -73,7 +73,7 @@ function BribeExplainer (props) {
       <h1>Want more boost tho?</h1>
       <p>TBH the rest of the Boosted Bribes Multipliers are a little bit more self explanatory.</p>
       <p>Basically just compound your Bribes from last round and HODL to get 1.25x aka <Text type="success">Boosted Bribe.</Text> </p>
-      <p>OR increase you CRE8R holdings by 35% - <Text type="success">${Math.round(cre8rScore*.35)}</Text> - to get 1.35x Boost aka <Text type="success">Boosted Bonus</Text>. </p>
+      <p>OR increase you CRE8R holdings by 35% - <Text type="success">${Math.round((cre8rScore*0.23)*.35)}</Text> - to get 1.35x Boost aka <Text type="success">Boosted Bonus</Text>. </p>
 
       <hr></hr>
       <h3>This App is WIP: For info about the higher boosts pls check: </h3>
