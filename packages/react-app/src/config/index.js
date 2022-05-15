@@ -1,4 +1,5 @@
 import addresses from "../addresses";
+import { usePoller, useBlockNumber } from "eth-hooks";
 
 export const CRE8R = 'cre8r.eth';
 export const BEETS = 'beets.eth';
@@ -123,10 +124,11 @@ export const bribeSettings = {
     network: network[FTM]
   }
 }
+//const blockNumber = useBlockNumber(props.provider);
 
-export const BLOCKNUMBER = 37320000;
-
-
+ export const BLOCKNUMBER = 38288120;  // change to latest block that using the thing we looked at the other day. 
+//export const BLOCKNUMBER = blockNumber;
+//console.log("test blockbumber:", blockNumber)
 export const BEETS_PROPOSALS = [
   0,1,2,3,4,5,6,7,
   "0x913940146e7d5ad7587d138348bc1a1f34c75e57f3a377cfbba862a084c0ed12", //round 8
