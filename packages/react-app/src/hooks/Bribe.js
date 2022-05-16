@@ -7,15 +7,20 @@ import { BEETS, BLOCKNUMBER } from "../config";
 import { bribeSettings, CRE8R } from "../config";
 import choices from "../data/choices";
 import votes from "../data/votes"
+import { useBlockNumber } from "eth-hooks";
 
 
 const DEBUG = false;
-export default function useBribe(provider, address, pollTime = 0, blockNumber = BLOCKNUMBER, space = CRE8R) {
+export default function useBribe(provider, address, pollTime = 0, blockNumber, space = CRE8R) {
   const [scores, setScores] = useState()
   // const [score, setScore] = useState();
   const [cre8rScore, setCre8rScore] = useState();
   const [beetsScore, setBeetsScore] = useState();
 
+  blockNumber = useBlockNumber(provider, (
+     blockNumber
+  )=>{console.log("jonoblocknumber",blockNumber)});
+  console.log("blocker number33:", blockNumber)
   // used to know how much an Fbeets holder voted for cre8r-ftm on the beets snapshot
   useEffect(() => {
     snapshot.utils.getScores(
@@ -36,10 +41,11 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber = 
       totalVotesForCre8r += res[i].choice["51"]
     }
     console.log(totalVotesForCre8r)
-  }, [address])
+  }, [address,blockNumber])
 
   // used for beets VP
   useEffect(() => {
+    console.log("inside useeffect:",blockNumber)
     snapshot.utils.getScores(
       BEETS,
       bribeSettings[BEETS].strategies,
@@ -58,7 +64,7 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber = 
       totalVotesForCre8r += res[i].choice["51"]
     }
     console.log(totalVotesForCre8r)
-  }, [address])
+  }, [address,blockNumber])
 
 
 

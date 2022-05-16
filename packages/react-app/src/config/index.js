@@ -1,5 +1,5 @@
 import addresses from "../addresses";
-import { usePoller, useBlockNumber } from "eth-hooks";
+
 
 export const CRE8R = 'cre8r.eth';
 export const BEETS = 'beets.eth';
@@ -41,6 +41,31 @@ const strategies = {
       }
     },
     {
+      "name": "erc20-balance-of",
+      "network": "250",
+      "params": {
+        "symbol": "ola",
+        "address": "0xbbB192f66256002C96Dae28770b2622DB41d56Cc",
+        "decimals": 18
+        
+      }
+    },
+    
+    {
+      "name": "masterchef-pool-balance",
+      "network": "250",
+      "params": {
+        "pid": "85",
+        "symbol": "bbMINOR",
+        "weight": 217,
+        "decimals": 18,
+        "tokenIndex": null,
+        "chefAddress": "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3",
+        "uniPairAddress": null,
+        "weightDecimals": 3
+      },
+    },
+    {
       "name": "erc20-balance-of-weighted",
       "network": "250",
       "params": {
@@ -48,6 +73,16 @@ const strategies = {
         "weight": 1,
         "address": "0x6D931508d47f1D858c209C5296E9afC091a2Ddff",
         "decimals": 18
+      }
+    },
+    {
+      "name": "erc20-balance-of",
+      "network": "250",
+      "params": {
+        "symbol": "unstaked SpiritLPs",
+        "address": "0x459e7c947E04d73687e786E4A48815005dFBd49A",
+        "decimals": 18
+        
       }
     },
     {
@@ -92,9 +127,11 @@ const strategies = {
           "chefAddress": "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3",
           "uniPairAddress": null,
           "weightDecimals": 0
-        },
+        }
       
       },
+        
+      
       
     {
       "name": "erc20-balance-of-weighted",
