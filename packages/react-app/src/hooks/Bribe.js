@@ -17,10 +17,8 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber, s
   const [cre8rScore, setCre8rScore] = useState();
   const [beetsScore, setBeetsScore] = useState();
 
-  blockNumber = useBlockNumber(provider, (
-     blockNumber
-  )=>{console.log("jonoblocknumber",blockNumber)});
-  console.log("blocker number33:", blockNumber)
+  const latestBlockNumber = useBlockNumber(provider);
+  const aggregateBlockNumber = blockNumber || latestBlockNumber
   // used to know how much an Fbeets holder voted for cre8r-ftm on the beets snapshot
   useEffect(() => {
     snapshot.utils.getScores(
@@ -28,7 +26,7 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber, s
       bribeSettings[CRE8R].strategies,
       bribeSettings[CRE8R].network,
       [address],
-      blockNumber
+      aggregateBlockNumber
     ).then(scores => {
       const scoreValid = scores &&  scores.filter((val, i) => val[address] != null)[0] && scores.filter((val, i) => val[address] != null)[0] [address]
       if (scoreValid) setCre8rScore(scoreValid)
@@ -51,7 +49,7 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber, s
       bribeSettings[BEETS].strategies,
       bribeSettings[BEETS].network,
       [address],
-      blockNumber
+      aggregateBlockNumber
     ).then(scores => {
       const scoreValid = scores &&  scores.filter((val, i) => val[address] != null)[0] && scores.filter((val, i) => val[address] != null)[0] [address]
       if (scoreValid) setBeetsScore(scoreValid)

@@ -9,7 +9,7 @@ import useBribe from "./hooks/Bribe"
 import { calculateBasicBoosted } from "./helpers/bribeMath"
 import { amountToLpToGetBasicBoosted } from "./helpers/bribeMath"
 import { Swap } from "./components";
-
+import {BLOCKNUMBER} from './config'
 const { Text } = Typography
 const { Panel } = Collapse
 const { Option } = Select
@@ -46,8 +46,8 @@ const eip712Example = {
 function BribeExplainer (props) {
   const address = useUserAddress(props.injectedProvider)
 
-  const { cre8rScore, beetsScore } = useBribe(props.injectedProvider, address)
-
+  const { latestCre8rScore, latestBeetsScore } = useBribe(props.injectedProvider, address)
+  const { cre8rScore, beetsScore } = useBribe(props.injectedProvider, address, BLOCKNUMBER)
   return (
     <Card style={{ backgroundColor: "rgb(0 0 0 / 93%)", textAlign: "center", fontSize: "16px", padding:"50px" }}>
       <h1>For new voters it all starts with Basic Boosted</h1>
@@ -74,6 +74,24 @@ function BribeExplainer (props) {
       <p>TBH the rest of the Boosted Bribes Multipliers are a little bit more self explanatory.</p>
       <p>Basically just compound your Bribes from last round and HODL to get 1.25x aka <Text type="success">Boosted Bribe.</Text> </p>
       <p>OR increase you CRE8R holdings by 35% - <Text type="success">${Math.round((cre8rScore*0.23)*.35)}</Text> - to get 1.35x Boost aka <Text type="success">Boosted Bonus</Text>. </p>
+
+
+      <p>
+        {latestBeetsScore ? (
+          <span>
+            For New Voters: LP at least <Text type="success">${Math.round(amountToLpToGetBasicBoosted(beetsScore))}</Text> with {address}
+            <br></br> To receive <Text type="success"> Basic Boosted </Text> Bribe amount: <Text type="success">${Math.round(calculateBasicBoosted(latestBeetsScore))}</Text>
+          </span>
+        ) : (
+          <span> Connect your $FBEETS wallet to calculate your bribe payment options.</span>
+        )}
+      </p>
+      {/* <Swap></Swap> lets try get this to work */}
+      <hr></hr>
+      <h1>Want more boost tho?</h1>
+      <p>TBH the rest of the Boosted Bribes Multipliers are a little bit more self explanatory.</p>
+      <p>Basically just compound your Bribes from last round and HODL to get 1.25x aka <Text type="success">Boosted Bribe.</Text> </p>
+      <p>OR increase you CRE8R holdings by 35% - <Text type="success">${Math.round((latestCre8rScore*0.23)*.35)}</Text> - to get 1.35x Boost aka <Text type="success">Boosted Bonus</Text>. </p>
 
       <hr></hr>
       <h3>This App is WIP: For info about the higher boosts pls check: </h3>
