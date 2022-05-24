@@ -17,6 +17,16 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import addresses from "./addresses";
 import useBribe from "./hooks/Bribe";
 
+import TagManager from 'react-gtm-module'
+
+const tagManagerArgs = {
+    gtmId: 'GTM-5PC69BZ'
+}
+
+TagManager.initialize(tagManagerArgs)
+
+
+
 
 const hub = 'https://hub.snapshot.org'; // or https://testnet.snapshot.org for testnet
 const client = new snapshot.Client712(hub);
