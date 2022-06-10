@@ -25,8 +25,17 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber = 
       [address],
       blockNumber
     ).then(scores => {
-      const scoreValid = scores &&  scores.filter((val, i) => val[address] != null)[0] && scores.filter((val, i) => val[address] != null)[0] [address]
-      if (scoreValid) setCre8rScore(scoreValid)
+      if (!scores) return;
+      const scoresWithValues = scores.filter((val, i) => val[address] != null)
+      let totalScore = 0
+      if (!scoresWithValues) return;
+      console.log(scoresWithValues)
+      for (let i = 0; i < scoresWithValues.length; i++) {
+        if (scoresWithValues[i][address]) {
+          totalScore += scoresWithValues[i][address]
+        }
+      }
+      setCre8rScore(totalScore)
     });
   }, [address])
 
@@ -39,8 +48,16 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber = 
       [address],
       blockNumber
     ).then(scores => {
-      const scoreValid = scores &&  scores.filter((val, i) => val[address] != null)[0] && scores.filter((val, i) => val[address] != null)[0] [address]
-      if (scoreValid) setBeetsScore(scoreValid)
+      if (!scores) return;
+      const scoresWithValues = scores.filter((val, i) => val[address] != null)
+      let totalScore = 0
+      if (!scoresWithValues) return;
+      for (let i = 0; i < scoresWithValues.length; i++) {
+        if (scoresWithValues[i][address]) {
+          totalScore += scoresWithValues[i][address]
+        }
+      }
+      setBeetsScore(totalScore)
     });
   }, [address])
 
