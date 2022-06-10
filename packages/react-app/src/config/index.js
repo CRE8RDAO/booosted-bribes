@@ -20,21 +20,24 @@ const strategies = {
         "weightDecimals": 3
       }
     },
-    
-{ 
-  "name": "erc20-balance-of",
-  "network": "250",
-  "params": {
-  "address": "0xbbB192f66256002C96Dae28770b2622DB41d56Cc",
-  "symbol": "OLA",
-  "decimals": 18
- }
-},
-{
-  "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  // add CRE8R but also gotta add beets back in
-  "symbol": "CRE8R",
-  "decimals": 18
-},
+    { 
+      "name": "erc20-balance-of",
+      "network": "250",
+      "params": {
+      "address": "0xbbB192f66256002C96Dae28770b2622DB41d56Cc",
+      "symbol": "OLA",
+      "decimals": 18
+    }
+    },
+    { 
+      "name": "erc20-balance-of",
+      "network": "250",
+      "params": {
+        "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  // add CRE8R but also gotta add beets back in
+          "symbol": "CRE8R",
+          "decimals": 18
+    }
+    },
     {
       "name": "erc20-balance-of-weighted",
       "network": "250",

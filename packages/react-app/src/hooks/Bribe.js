@@ -28,14 +28,6 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber = 
       const scoreValid = scores &&  scores.filter((val, i) => val[address] != null)[0] && scores.filter((val, i) => val[address] != null)[0] [address]
       if (scoreValid) setCre8rScore(scoreValid)
     });
-    const choice = choices["51"]
-    console.log(choice)
-    const res = votes.data.votes.filter(obj => obj.choice["51"])
-    let totalVotesForCre8r = 0
-    for (let i = 0; i < res.length; i++) {
-      totalVotesForCre8r += res[i].choice["51"]
-    }
-    console.log(totalVotesForCre8r)
   }, [address])
 
   // used for beets VP
@@ -50,14 +42,6 @@ export default function useBribe(provider, address, pollTime = 0, blockNumber = 
       const scoreValid = scores &&  scores.filter((val, i) => val[address] != null)[0] && scores.filter((val, i) => val[address] != null)[0] [address]
       if (scoreValid) setBeetsScore(scoreValid)
     });
-    const choice = choices["51"]
-    console.log(choice)
-    const res = votes.data.votes.filter(obj => obj.choice["51"])
-    let totalVotesForCre8r = 0
-    for (let i = 0; i < res.length; i++) {
-      totalVotesForCre8r += res[i].choice["51"]
-    }
-    console.log(totalVotesForCre8r)
   }, [address])
 
 
