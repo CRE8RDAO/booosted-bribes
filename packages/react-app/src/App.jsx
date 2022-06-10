@@ -16,8 +16,16 @@ import SignatorViewer from "./SignatorViewer";
 import snapshot from '@snapshot-labs/snapshot.js';
 import addresses from "./addresses";
 import useBribe from "./hooks/Bribe";
-
+import BribesDisplay from './BribesDisplay'
 import TagManager from 'react-gtm-module'
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql
+} from "@apollo/client";
+
 
 const tagManagerArgs = {
     gtmId: 'GTM-5PC69BZ'
@@ -73,6 +81,12 @@ const logoutOfWeb3Modal = async () => {
     window.location.reload();
   }, 1);
 };
+
+const clientSnapshotGQL = new ApolloClient({
+  uri: 'https://hub.snapshot.org/graphql',
+  cache: new InMemoryCache()
+});
+
 
 function App() {
   const mainnetProvider = scaffoldEthProvider && scaffoldEthProvider._network ? scaffoldEthProvider : mainnetInfura;
@@ -163,56 +177,67 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {/* ✏️ Edit the header and change the title to your project name */}
-      <Affix offsetTop={0}>
-        <Header
-          extra={[
-            address && <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />,
-            ...modalButtons,
-          ]}
-        />
-      </Affix>
-      <div className="logo-wrapper">
-        <img className="logo" src={signatorLogo} alt="Signatorio" />
-      </div>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/">
-            <Signator style={{ textAlign: "center", fontSize: "16px" }}
-              mainnetProvider={mainnetProvider}
-              injectedProvider={injectedProvider}
-              address={address}
-              loadWeb3Modal={loadWeb3Modal}
-              chainList={chainList}
-            />
-          </Route>
-          <Route path="/view">
-            <SignatorViewer
-              mainnetProvider={mainnetProvider}
-              injectedProvider={injectedProvider}
-              address={address}
-              loadWeb3Modal={loadWeb3Modal}
-              chainList={chainList}
-            />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+    <ApolloProvider client={clientSnapshotGQL}>
+      <div className="App">
+        {/* ✏️ Edit the header and change the title to your project name */}
+        <Affix offsetTop={0}>
+          <Header
+            extra={[
+              address && <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />,
+              ...modalButtons,
+            ]}
+          />
+        </Affix>
+        <div className="logo-wrapper">
+          <img className="logo" src={signatorLogo} alt="Signatorio" />
+        </div>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/">
+              <Signator style={{ textAlign: "center", fontSize: "16px" }}
+                mainnetProvider={mainnetProvider}
+                injectedProvider={injectedProvider}
+                address={address}
+                loadWeb3Modal={loadWeb3Modal}
+                chainList={chainList}
+              />
+            </Route>
+            <Route path="/view">
+              <SignatorViewer
+                mainnetProvider={mainnetProvider}
+                injectedProvider={injectedProvider}
+                address={address}
+                loadWeb3Modal={loadWeb3Modal}
+                chainList={chainList}
+              />
+            </Route>
+            <Route exact path="/calc">
+              <BribesDisplay style={{ textAlign: "center", fontSize: "16px" }}
+                mainnetProvider={mainnetProvider}
+                injectedProvider={injectedProvider}
+                address={address}
+                loadWeb3Modal={loadWeb3Modal}
+                chainList={chainList}
+              />
+            </Route>
+          </Switch>
+        </BrowserRouter>
 
-      {/* <ThemeSwitch /> */}
-      <Footer style={{ textAlign: "center", fontSize: "16px" }}>
-        <Space>
-          <a href="https://github.com/CRE8RDAO/bb" target="_blank">
-            <GithubOutlined />
-          </a>
-         {cre8rScore ? <span>Your CRE8R Holdings across Fantom Pools and Vaults ${Math.round(cre8rScore*0.23)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
-         {beetsScore ? <span>Your $FBEETS voting power as of block #40013791 {Math.round(beetsScore)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
-          <a href="https://cre8r.vip/boosted-bribes/" target="_blank">
-            🧱 Boosted Bribes™ {" "}
-          </a>
-        </Space>
-      </Footer>
-    </div>
+        {/* <ThemeSwitch /> */}
+        <Footer style={{ textAlign: "center", fontSize: "16px" }}>
+          <Space>
+            <a href="https://github.com/CRE8RDAO/bb" target="_blank">
+              <GithubOutlined />
+            </a>
+          {cre8rScore ? <span>Your CRE8R Holdings across Fantom Pools and Vaults ${Math.round(cre8rScore*0.23)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+          {beetsScore ? <span>Your $FBEETS voting power as of block #40013791 {Math.round(beetsScore)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+            <a href="https://cre8r.vip/boosted-bribes/" target="_blank">
+              🧱 Boosted Bribes™ {" "}
+            </a>
+          </Space>
+        </Footer>
+      </div>
+    </ApolloProvider>
   );
 }
 
