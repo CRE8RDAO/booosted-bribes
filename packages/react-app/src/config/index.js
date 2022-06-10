@@ -35,7 +35,8 @@ const strategies = {
       "params": {
         "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  // add CRE8R but also gotta add beets back in
           "symbol": "CRE8R",
-          "decimals": 18
+          "decimals": 18,
+          "weight": 9
     }
     },
     {
