@@ -39,7 +39,6 @@ export const useVotes = (proposalId, poolPos) => {
       const _voters = {}
       let _total = 0
       for (let i = 0; i < data.votes.length; i++) {
-        console.log(data.votes[i].choice)
         if (!data.votes[i].choice[poolPos]) continue;
         let percentVoteForPool = data.votes[i].choice[poolPos]/(Object.values(data.votes[i].choice).reduce((acc, val) => acc + val))
         let vpToPool = data.votes[i].vp * percentVoteForPool

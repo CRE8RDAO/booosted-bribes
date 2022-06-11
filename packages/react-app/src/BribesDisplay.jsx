@@ -12,6 +12,7 @@ import { Swap } from "./components";
 import { useQuery, gql } from '@apollo/client';
 import { usePercent} from './hooks/Bribe/Percent'
 import { useVotes } from "./hooks/Bribe/Votes"
+import useHoldings from './hooks/Bribe/Holdings'
 const { Text } = Typography
 const { Panel } = Collapse
 const { Option } = Select
@@ -32,7 +33,10 @@ function BribeExplainer (props) {
   const poolPos = "46" // in order to get this number, you need to look at the array of choices and the position that `pool` is what this number should be, (1-indexed)
   const percent = usePercent(proposalId, pool)
   const {voters, total} = useVotes(proposalId, poolPos)
-
+  const beetsBlockRound11 = 39001234
+  const beetsBlockRound12 = 40013791
+  const addressesOfVoters = Object.keys(voters)
+  const f = useHoldings(props.injectedProvider, addressesOfVoters, beetsBlockRound12)
 
   //fetch percentage of last weeks proposal
   // get addresses and absolute votes from addresses that voted for cre8r
