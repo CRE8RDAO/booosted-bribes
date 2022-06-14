@@ -9,18 +9,8 @@ import choices from "../../data/choices";
 import votes from "../../data/votes"
 
 export default function useLastPayout(provider, addresses, blockNumber, txHash) {
-  const [scores, setScores] = useState()
-  // const [score, setScore] = useState();
-  const [cre8rScore, setCre8rScore] = useState();
-  const [beetsScore, setBeetsScore] = useState();
-
-  // used to know how much an Fbeets holder voted for cre8r-ftm on the beets snapshot
-  useMemo(() => {
   return {
-    cre8rScore, beetsScore
-  };
-})
-  return {"0x28aa4F9ffe21365473B64C161b566C3CdeAD0108":66218.40133
+    "0x28aa4F9ffe21365473B64C161b566C3CdeAD0108":66218.40133
   ,"0xA5d896AcCC301fcaA21f03592269310e7444AA40":49158.67566
   ,"0xE221D5371EF7334a76aAC4f70b94DD80d1C18a00":31384.49833
   ,"0x43C4fF14DAe2Fbb389Dd94498C3D610A0c69a89d":27031.85162

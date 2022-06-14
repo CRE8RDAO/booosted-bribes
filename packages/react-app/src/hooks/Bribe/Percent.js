@@ -38,10 +38,9 @@ export const usePercent = (proposalId, pool) => {
       for (let i = 0; i < data.proposal.choices.length; i++) {
         percentVotes[data.proposal.choices[i]] = data.proposal.scores[i]/totalVotes * 100
       }
-      console.log(data)
       setPercent(percentVotes[pool])
     }
-  },[loading, error, data])
+  },[data])
   return percent
 }
 

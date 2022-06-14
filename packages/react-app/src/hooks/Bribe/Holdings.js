@@ -56,7 +56,7 @@ export default function useHoldings(provider, addresses, blockNumber) {
       }
     }
   }
-  console.log(holdings)
+  setCre8rScore(holdings)
 });
 }, [addresses])
 /*
@@ -91,7 +91,7 @@ export default function useHoldings(provider, addresses, blockNumber) {
   })
 */
   return {
-    cre8rScore, beetsScore
+    holdings: cre8rScore
   };
 }
 

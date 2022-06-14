@@ -48,7 +48,7 @@ export const useVotes = (proposalId, poolPos) => {
       setTotal(_total)
       setVoters(_voters)
     }
-  },[loading, error, data])
-  return {voters, total}
+  },[data])
+  return {voters, total, addresses: Object.keys(voters)}
 }
 

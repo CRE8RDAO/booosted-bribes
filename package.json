@@ -20,6 +20,7 @@
     "node": "yarn workspace @scaffold-eth/hardhat chain",
     "test": "yarn workspace @scaffold-eth/hardhat test",
     "start": "yarn workspace @scaffold-eth/react-app start",
+    "generate-payouts": "yarn workspace @scaffold-eth/react-app generate-payouts",
     "compile": "yarn workspace @scaffold-eth/hardhat compile",
     "deploy": "yarn workspace @scaffold-eth/hardhat deploy",
     "watch": "yarn workspace @scaffold-eth/hardhat watch",
@@ -59,5 +60,8 @@
       "**/hardhat",
       "**/hardhat/**"
     ]
+  },
+  "dependencies": {
+    "cross-fetch": "^3.1.5"
   }
 }
