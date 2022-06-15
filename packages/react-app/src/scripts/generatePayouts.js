@@ -435,7 +435,7 @@ function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, 
     let lastHoldings = holdings11[a] || 0
     let lastWeekPayout = lastPayouts[a]
     if (!lastPayouts[a]) lastWeekPayout = 0
-    let dif = currentHoldings - lastHoldings
+    let dif = currentHoldings - (lastHoldings + lastWeekPayout) // a negative holding means that a used
     let basicBribe = voters[a]/total * 100 * percent * cre8rBasicPayoutperPercent 
     // totalPayoutAtBasic = percent * 100 * cre8rBasicPayoutperPercent 
     // basicBribe = ratio / cre8rPrice * percent * cre8rBasicPayoutperPercent
@@ -446,7 +446,7 @@ function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, 
     let boostedBonus = 0
     let payoutUSD = 0
     
-    if (dif <= 0 && currentHoldings == 0) { //why do we need the &&? could we remove currentHoldings?
+    if (dif <= -currentHoldings * .1) { //why do we need the &&? could we remove currentHoldings?
       bogusestBribe = basicBribe * 0.5
     }
   
