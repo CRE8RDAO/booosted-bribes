@@ -1,6 +1,7 @@
 const snapshot = require('@snapshot-labs/snapshot.js');
 const {ApolloClient, gql, HttpLink, InMemoryCache} = require('@apollo/client')
 const fetch = require('cross-fetch')
+const fs = require('fs');
 const proposalId = "0xe7a33f8691c0087999a21a6129f5f87ff01ca7ae952ee6304aac44e20c0b82db"
 const pool = "CRE8R in F-Major (CRE8R-FTM)"
 const poolPos = "46" // in order to get this number, you need to look at the array of choices and the position that `pool` is what this number should be, (1-indexed)
@@ -108,7 +109,7 @@ const CRE8Rstrategies = [
 
 const bribeSettings = {
   [CRE8R]: {
-    strategies: CRE8Rstrategies,
+    strategies: [...CRE8Rstrategies], //cre8r strategy 2 is the erc20 balance of address
     network: 250
   }
 }
@@ -241,9 +242,6 @@ const getPercent = async () => {
 // getVotes(proposalId, poolPos).then(res => {
   
 // })
-getPercent(proposalId, pool).then(res => {
-  console.log(res)
-})
 
 /**
  * todo: dynamically get payouts
@@ -379,36 +377,68 @@ function getLastPayout() {
   ,"0xe5d81171D523cc6E68F5348710F3a62b2c6e795c":0.046485882}
 }
 
-function write(json) {
-  const fs = require('fs');
+/**
+ * 
+ * @param {*} json 
+ * @param {*} name requires .json at end
+ */
+function writeJSON(json, name) {
   let data = JSON.stringify(json);
-  fs.writeFileSync('data.json', data);
-  console.log('json written to data.json')
+  fs.writeFileSync(name || 'data.json', data);
+  console.log(`json written to ${name || 'data.json'}`)
 } 
 
-(async () => {
+/**
+ * 
+ * @param {*} csv 
+ * @param {*} name requires .csv at end
+ */
+function writeCSV(csv, name) {
+  // let data = JSON.stringify(csv);
+  fs.writeFileSync(name || 'data.csv', csv);
+  console.log(`csv written to ${name || 'data.csv'}`)
+} 
+
+
+
+async function main(beetsBlockRound11, beetsBlockRound12, proposalId, poolPos, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
-  console.log(addresses)
   const holdings11 = await getHoldings(addresses, beetsBlockRound11)
   const holdings12 = await getHoldings(addresses, beetsBlockRound12)
   const percent = await getPercent();
   const lastPayouts = await getLastPayout()
-  calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, 0.03, 1041)
-})()
+  const {payouts, debug} = calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
+  const debugCSV = parseJSONToCSV(debug)
+  writeCSV(debugCSV)
+}
 
-function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice = 0.03, cre8rBasicPayoutperPercent = 1041) {
+/**
+ * 
+ * @param {*} addresses 
+ * @param {*} voters 
+ * @param {*} total 
+ * @param {*} percent 
+ * @param {*} holdings11 
+ * @param {*} holdings12 
+ * @param {*} lastPayouts 
+ * @param {*} cre8rPrice 
+ * @param {*} cre8rBasicPayoutperPercent 
+ * @param {*} limit 
+ * @returns {{payout: any, address: any}}
+ */
+function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit) {
   const payouts = []
-  for (let i = 0; i < addresses.length; i += 1000000) {
-    // let a = addresses[i]
-    let a = '0x28aa4F9ffe21365473B64C161b566C3CdeAD0108'
+  const debug = []
+  for (let i = 0; i < addresses.length && (!limit ? true : i < limit) ; i += 1) {
+    let a = addresses[i]
     let currentHoldings = holdings12[a] || 0
     let lastHoldings = holdings11[a] || 0
     let lastWeekPayout = lastPayouts[a]
     if (!lastPayouts[a]) lastWeekPayout = 0
     let dif = currentHoldings - lastHoldings
-    console.log(percent)
-    let basicBribe = voters[a]/total/cre8rPrice * percent * cre8rBasicPayoutperPercent
-    
+    let basicBribe = voters[a]/total * 100 * percent * cre8rBasicPayoutperPercent 
+    // totalPayoutAtBasic = percent * 100 * cre8rBasicPayoutperPercent 
+    // basicBribe = ratio / cre8rPrice * percent * cre8rBasicPayoutperPercent
     //payouts
     let bogusestBribe = 0
     let basicBoost = 0
@@ -416,7 +446,7 @@ function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, 
     let boostedBonus = 0
     let payoutUSD = 0
     
-    if (dif <= 0 && currentHoldings == 0) {
+    if (dif <= 0 && currentHoldings == 0) { //why do we need the &&? could we remove currentHoldings?
       bogusestBribe = basicBribe * 0.5
     }
   
@@ -430,10 +460,10 @@ function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, 
       boostedBribe = basicBribe
     }
   
-    if (currentHoldings > (lastHoldings + lastWeekPayout) + lastHoldings*0.35) {
+    if (currentHoldings > (lastHoldings + lastWeekPayout) + lastHoldings*0.35) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
       boostedBonus = basicBribe * 1.35
     }
-  
+
     if (bogusestBribe) {
       payoutUSD = bogusestBribe
     } else if (basicBoost) {
@@ -443,7 +473,7 @@ function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, 
     } else if (boostedBonus) {
       payoutUSD = boostedBribe
     }
-    const debugBribes = {
+    let debugBribes = {
       address: a,
       in: {
         ratio: voters[a]/total,
@@ -460,11 +490,30 @@ function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, 
         boostedBribe,
         boostedBonus,
         payoutUSD,
+        payoutCre8r: payoutUSD/cre8rPrice
       }
     }
+
     console.log(debugBribes)
+    debug.push({address: debugBribes.address, in: '',...debugBribes.in,out: '', ...debugBribes.out})
     payouts.push({address: a, payout: payoutUSD})
   }
-  return payouts
+  return {payouts, debug}
 }
 
+/**
+ * Must be in format 
+ * @param {[{field1: data, field2: any, ...}, ...]} myData 
+ */
+function parseJSONToCSV (myData) {
+  const { parse } = require('json2csv');
+  const opts = { fields: Object.keys(myData[0]) };
+
+  try {
+    const csv = parse(myData, opts);
+    return csv
+  } catch (err) {
+    console.error(err);
+  }
+}
+main(beetsBlockRound11, beetsBlockRound12, proposalId, poolPos)
