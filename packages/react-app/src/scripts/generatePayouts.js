@@ -253,7 +253,7 @@ const getPercentAndPoolPos = async (proposalId, pool) => {
  * todo: dynamically get payouts
  * @returns 
  */
-function getLastPayout() {
+function getLastPayout(txHash) {
   return {
     "0x28aa4F9ffe21365473B64C161b566C3CdeAD0108":66218.40133
   ,"0xA5d896AcCC301fcaA21f03592269310e7444AA40":49158.67566
@@ -405,12 +405,11 @@ function writeCSV(csv, name) {
   console.log(`csv written to ${name || 'data.csv'}`)
 } 
 
-async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
+async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, lastPayouts, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
   const {percent, poolPos} = await getPercentAndPoolPos(proposalId, pool);
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
   const holdings11 = await getHoldings(addresses, lastHoldingsAddresses)
   const holdings12 = await getHoldings(addresses, currentHoldingsAddresses)
-  const lastPayouts = await getLastPayout()
   const {payouts, debug} = calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
   const debugCSV = parseJSONToCSV(debug)
   writeCSV(debugCSV)
@@ -531,5 +530,11 @@ const beetsBlockRound11 = 39001234
 const afterBeetsBlockRound11 = 39320899
 const beetsBlockRound12 = 40013791 // 8 days ago
 const currentBlock = 40631347 // now
-const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268"
-main(beetsBlockRound12 - 1, currentBlock, proposalId, pool, undefined, 0.0158)
+const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268";
+
+(async () => {
+  main(beetsBlockRound11, currentBlock, proposalId, pool, await getLastPayout("txHash goes here but this is currently hardcoded") , undefined, 0.0158)
+})()
+
+
+//node ./packages/react-app/src/scripts/generatePayouts.js
