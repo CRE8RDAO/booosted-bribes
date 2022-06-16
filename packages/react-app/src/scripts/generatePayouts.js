@@ -18,7 +18,7 @@ const CRE8Rstrategies = [
     "params": {
       "pid": "39",
       "symbol": "BEETSLP -> SLP",
-      "weight": 202,
+      "weight": 172,
       "tokenIndex": null,
       "chefAddress": "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3",
       "uniPairAddress": null,
@@ -120,7 +120,7 @@ const bribeSettings = {
 function getHoldings(addresses, blockNumber) {
   return snapshot.utils.getScores(
     CRE8R,
-    bribeSettings[CRE8R].strategies,
+    [...bribeSettings[CRE8R].strategies],
     bribeSettings[CRE8R].network,
     [...addresses],
     blockNumber
@@ -434,6 +434,7 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
   const payouts = []
   const debug = []
   for (let i = 0; i < addresses.length && (limit == null ? true : i < limit) ; i += 1) {
+
     let a = addresses[i]
     let currentHoldings = currentHoldingsAddresses[a] || 0
     let lastHoldings = lastHoldingsAddresses[a] || 0
@@ -524,7 +525,11 @@ process.argv.forEach(function (val, index, array) {
   // 2 is variable
 });
 
+const beetsBlockRound10 = 38001572
 const beetsBlockRound11 = 39001234
-const beetsBlockRound12 = 40013791
+//beets -> cre8r
+const afterBeetsBlockRound11 = 39320899
+const beetsBlockRound12 = 40013791 // 8 days ago
+const currentBlock = 40631347 // now
 const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268"
-main(beetsBlockRound11, beetsBlockRound12, proposalId, pool, undefined, 0.0158)
+main(40013791, currentBlock, proposalId, pool, undefined, 0.0158)
