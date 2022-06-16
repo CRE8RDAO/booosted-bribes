@@ -11,6 +11,7 @@ const client = new ApolloClient({
 
 const CRE8R = 'cre8r'
 
+//todo - dynamically get prices to set correct ratios
 const CRE8Rstrategies = [
   {
     "name": "masterchef-pool-balance",
@@ -249,6 +250,7 @@ const getPercentAndPoolPos = async (proposalId, pool) => {
   
 // })
 
+//todo - dynamically get payouts from txHash
 /**
  * todo: dynamically get payouts
  * @returns 
@@ -533,8 +535,8 @@ const currentBlock = 40631347 // now
 const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268";
 
 (async () => {
-  main(beetsBlockRound11, currentBlock, proposalId, pool, await getLastPayout("txHash goes here but this is currently hardcoded") , undefined, 0.0158)
+  main(beetsBlockRound11, beetsBlockRound12, proposalId, pool, await getLastPayout("txHash goes here but this is currently hardcoded") , undefined, 0.0158) //todo - dynamically get cre8r price
 })()
-
+//todo - read about best practices when writing scripts like this, (testing, coverage, readable)
 
 //node ./packages/react-app/src/scripts/generatePayouts.js
