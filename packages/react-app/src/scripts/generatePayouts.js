@@ -234,7 +234,7 @@ const getPercentAndPoolPos = async (proposalId, pool) => {
       for (let i = 0; i < data.proposal.choices.length; i++) {
         percentVotes[data.proposal.choices[i]] = data.proposal.scores[i]/totalVotes
         if (data.proposal.choices[i] == pool) {
-          poolPos = i + 2
+          poolPos = i + 1
         }
       }
       const percent = percentVotes[pool];
@@ -404,7 +404,6 @@ function writeCSV(csv, name) {
 
 async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
   const {percent, poolPos} = await getPercentAndPoolPos(proposalId, pool);
-  console.log(poolPos)
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
   const holdings11 = await getHoldings(addresses, lastHoldingsAddresses)
   const holdings12 = await getHoldings(addresses, currentHoldingsAddresses)
@@ -431,7 +430,7 @@ async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId,
 function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, currentHoldingsAddresses, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit) {
   const payouts = []
   const debug = []
-  for (let i = 0; i < addresses.length && (!limit ? true : i < limit) ; i += 1) {
+  for (let i = 0; i < addresses.length && (limit == null ? true : i < limit) ; i += 1) {
     let a = addresses[i]
     let currentHoldings = currentHoldingsAddresses[a] || 0
     let lastHoldings = lastHoldingsAddresses[a] || 0
@@ -529,4 +528,4 @@ process.argv.forEach(function (val, index, array) {
 const beetsBlockRound11 = 39001234
 const beetsBlockRound12 = 40013791
 const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268"
-main(beetsBlockRound11, beetsBlockRound12, proposalId, pool, null, 0.0158)
+main(beetsBlockRound11, beetsBlockRound12, proposalId, pool, undefined, 0.0158)
