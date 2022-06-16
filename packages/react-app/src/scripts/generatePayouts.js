@@ -41,7 +41,7 @@ const CRE8Rstrategies = [
       "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  // add CRE8R but also gotta add beets back in
         "symbol": "CRE8R",
         "decimals": 18,
-        "weight": 9
+        "weight": 0.12
   }
   },
   {
@@ -532,4 +532,4 @@ const afterBeetsBlockRound11 = 39320899
 const beetsBlockRound12 = 40013791 // 8 days ago
 const currentBlock = 40631347 // now
 const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268"
-main(40013791, currentBlock, proposalId, pool, undefined, 0.0158)
+main(beetsBlockRound12 - 1, currentBlock, proposalId, pool, undefined, 0.0158)
