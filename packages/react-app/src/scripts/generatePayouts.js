@@ -2,16 +2,13 @@ const snapshot = require('@snapshot-labs/snapshot.js');
 const {ApolloClient, gql, HttpLink, InMemoryCache} = require('@apollo/client')
 const fetch = require('cross-fetch')
 const fs = require('fs');
-const proposalId = "0xe7a33f8691c0087999a21a6129f5f87ff01ca7ae952ee6304aac44e20c0b82db"
 const pool = "CRE8R in F-Major (CRE8R-FTM)"
-const poolPos = "46" // in order to get this number, you need to look at the array of choices and the position that `pool` is what this number should be, (1-indexed)
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: 'https://hub.snapshot.org/graphql', fetch }),
   cache: new InMemoryCache(),
 });
-const beetsBlockRound11 = 39001234
-const beetsBlockRound12 = 40013791
+
 const CRE8R = 'cre8r'
 
 const CRE8Rstrategies = [
@@ -200,9 +197,11 @@ query Votes($id: String!, $first: Int, $skip: Int, $orderBy: String, $orderDirec
 }
 /**
  * 
- * @returns percent in decimal form
+ * @param {*} proposalId 
+ * @param {*} pool pool name - must be exact name
+ * @returns {{percent: any, poolPos: string}} poolPos is a number that is a string and is 1 indexed of choices
  */
-const getPercent = async () => {
+const getPercentAndPoolPos = async (proposalId, pool) => {
   const scoresQuery = gql`
   query ($proposalId: String!) {
     proposal(id: $proposalId) {
@@ -228,14 +227,18 @@ const getPercent = async () => {
     if (data) {
       const percentVotes = {}
       let totalVotes = 0
+      let poolPos;
       for (let i = 0; i < data.proposal.choices.length; i++) {
         totalVotes += data.proposal.scores[i]
       }
       for (let i = 0; i < data.proposal.choices.length; i++) {
         percentVotes[data.proposal.choices[i]] = data.proposal.scores[i]/totalVotes
+        if (data.proposal.choices[i] == pool) {
+          poolPos = i + 2
+        }
       }
       const percent = percentVotes[pool];
-      return percent
+      return {percent, poolPos: poolPos.toString()}
     }
     throw new Error('percent not found, check if you have a valid proposal id')
 }
@@ -399,13 +402,12 @@ function writeCSV(csv, name) {
   console.log(`csv written to ${name || 'data.csv'}`)
 } 
 
-
-
-async function main(beetsBlockRound11, beetsBlockRound12, proposalId, poolPos, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
+async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
+  const {percent, poolPos} = await getPercentAndPoolPos(proposalId, pool);
+  console.log(poolPos)
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
-  const holdings11 = await getHoldings(addresses, beetsBlockRound11)
-  const holdings12 = await getHoldings(addresses, beetsBlockRound12)
-  const percent = await getPercent();
+  const holdings11 = await getHoldings(addresses, lastHoldingsAddresses)
+  const holdings12 = await getHoldings(addresses, currentHoldingsAddresses)
   const lastPayouts = await getLastPayout()
   const {payouts, debug} = calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
   const debugCSV = parseJSONToCSV(debug)
@@ -426,13 +428,13 @@ async function main(beetsBlockRound11, beetsBlockRound12, proposalId, poolPos, l
  * @param {*} limit 
  * @returns {{payout: any, address: any}}
  */
-function calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit) {
+function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, currentHoldingsAddresses, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit) {
   const payouts = []
   const debug = []
   for (let i = 0; i < addresses.length && (!limit ? true : i < limit) ; i += 1) {
     let a = addresses[i]
-    let currentHoldings = holdings12[a] || 0
-    let lastHoldings = holdings11[a] || 0
+    let currentHoldings = currentHoldingsAddresses[a] || 0
+    let lastHoldings = lastHoldingsAddresses[a] || 0
     let lastWeekPayout = lastPayouts[a]
     if (!lastPayouts[a]) lastWeekPayout = 0
     let dif = currentHoldings - (lastHoldings + lastWeekPayout) // a negative holding means that a used
@@ -516,4 +518,15 @@ function parseJSONToCSV (myData) {
     console.error(err);
   }
 }
-main(beetsBlockRound11, beetsBlockRound12, proposalId, poolPos)
+
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
+  // 0 is useless
+  // 1 is path
+  // 2 is variable
+});
+
+const beetsBlockRound11 = 39001234
+const beetsBlockRound12 = 40013791
+const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268"
+main(beetsBlockRound11, beetsBlockRound12, proposalId, pool, null, 0.0158)
