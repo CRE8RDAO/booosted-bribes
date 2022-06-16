@@ -78,7 +78,7 @@ const CRE8Rstrategies = [
     "name": "contract-call",
     "network": "250",
     "params": {
-      "symbol": "spiritLPCRE8R",
+      "symbol": "spiritLPCRE8R", //go to spiritswap cre8r farm to see price to see
       "address": "0xDcD990038d9CBe98B84a6aD9dBc880e3d4b06599",
       "decimals": 18,
       "methodABI": {
@@ -138,6 +138,9 @@ function getHoldings(addresses, blockNumber) {
       }                             
     }
   }
+  for (let i = 0; i < Object.keys(holdings).length; i++) {
+    holdings[Object.keys(holdings)[i]] *= 8.2 //converting vp to cre8r
+  } 
     return holdings
   })
 }
