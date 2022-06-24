@@ -33,7 +33,7 @@ const strategies = {
       "name": "erc20-balance-of",
       "network": "250",
       "params": {
-        "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  // add CRE8R but also gotta add beets back in
+        "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  
           "symbol": "CRE8R",
           "decimals": 18,
           "weight": 9
@@ -145,7 +145,7 @@ export const bribeSettings = {
 }
 //const blockNumber = useBlockNumber(props.provider);
 
- export const BLOCKNUMBER = 40013791;  // change to latest block that using the thing we looked at the other day. 
+ export const BLOCKNUMBER = 41098725;  // change to latest block that using the thing we looked at the other day. 
 //export const BLOCKNUMBER = blockNumber;
 //console.log("test blockbumber:", blockNumber)
 export const BEETS_PROPOSALS = [
