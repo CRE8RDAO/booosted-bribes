@@ -230,7 +230,7 @@ function App() {
               <GithubOutlined />
             </a>
           {cre8rScore ? <span>Your CRE8R Holdings across Fantom Pools and Vaults ${Math.round(cre8rScore*0.18)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
-          {beetsScore ? <span>Your $FBEETS voting power as of block #41098725 {Math.round(beetsScore)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+          {beetsScore ? <span>Your $FBEETS voting power as of block number #41098725 {Math.round(beetsScore)}</span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
             <a href="https://cre8r.vip/boosted-bribes/" target="_blank">
               🧱 Boosted Bribes™ {" "}
             </a>
