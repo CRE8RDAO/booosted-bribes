@@ -565,7 +565,7 @@ process.argv.forEach(function (val, index, array) {
 const beetsBlockRound11 = 39001234
 const beetsBlockRound12 = 40013791 
 const proposalId12 = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268";
-const cre8rPrice = 0.0158
+const cre8rPrice = 0.0158;
 
 (async () => {
   main(beetsBlockRound11, beetsBlockRound12, proposalId12, pool , undefined, cre8rPrice) //todo - dynamically get cre8r price
