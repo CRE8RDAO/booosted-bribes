@@ -88,6 +88,7 @@
     "extends": "react-app"
   },
   "scripts": {
+    "payouts": "node ./src/scripts/generatePayouts.js",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "start": "react-scripts start",

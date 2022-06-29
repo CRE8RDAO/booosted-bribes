@@ -2,6 +2,8 @@ const snapshot = require('@snapshot-labs/snapshot.js');
 const {ApolloClient, gql, HttpLink, InMemoryCache} = require('@apollo/client')
 const fetch = require('cross-fetch')
 const fs = require('fs');
+const path = require('path');
+
 const pool = "CRE8R in F-Major (CRE8R-FTM)"
 
 const client = new ApolloClient({
@@ -255,7 +257,7 @@ const getPercentAndPoolPos = async (proposalId, pool) => {
  * todo: dynamically get payouts
  * @returns 
  */
-function getLastPayout(txHash) {
+function getLastPayoutRound11(txHash) {
   return {
     "0x28aa4F9ffe21365473B64C161b566C3CdeAD0108":66218.40133
   ,"0xA5d896AcCC301fcaA21f03592269310e7444AA40":49158.67566
@@ -384,6 +386,13 @@ function getLastPayout(txHash) {
   ,"0x86aA0f0231A2267BC0ee99Be06D5d5609f08205A":0.807061914
   ,"0xe5d81171D523cc6E68F5348710F3a62b2c6e795c":0.046485882}
 }
+function convertJSONToPayoutInfo (data) {
+  let payoutData = {}
+  for (let i = 0; i < data.length; i++) {
+    payoutData[data[i].address] = data[i].payoutUSD
+  }
+  return payoutData
+}
 
 /**
  * 
@@ -392,7 +401,7 @@ function getLastPayout(txHash) {
  */
 function writeJSON(json, name) {
   let data = JSON.stringify(json);
-  fs.writeFileSync(name || 'data.json', data);
+  fs.writeFileSync(path.resolve(__dirname, "../../../../payouts", name) || 'data.json', data);
   console.log(`json written to ${name || 'data.json'}`)
 } 
 
@@ -403,18 +412,46 @@ function writeJSON(json, name) {
  */
 function writeCSV(csv, name) {
   // let data = JSON.stringify(csv);
-  fs.writeFileSync(name || 'data.csv', csv);
+  fs.writeFileSync(path.resolve(__dirname, "../../../../payouts", name) || 'data.csv', csv);
   console.log(`csv written to ${name || 'data.csv'}`)
+  fs.pat
 } 
 
-async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, lastPayouts, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
+async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
+  let lastPayouts;
+  if (lastHoldingsAddresses == beetsBlockRound11) {
+    lastPayouts = getLastPayoutRound11();
+  } else {
+    let lastPayoutsData;
+    try {
+      lastPayoutsData = require(path.resolve(__dirname, "../../../../payouts", `bribe-payouts-${lastHoldingsAddresses}.json`))
+    } catch(e) {
+      console.log(e)
+      console.error(`\n 🚨🚨🚨🚨🚨🚨 ERROR 🚨🚨🚨🚨🚨🚨 \n \n 🚨Make sure that ${path.resolve(__dirname, "../../../../payouts", `bribe-payouts-${lastHoldingsAddresses}.json`)} exists.🚨
+      \n
+      When you run this script, it generates a json with the csv as metadata so that it can get the last snapshots payout.
+      `)
+      return;
+    }
+    lastPayouts = convertJSONToPayoutInfo(lastPayoutsData);
+  }
+  
   const {percent, poolPos} = await getPercentAndPoolPos(proposalId, pool);
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
-  const holdings11 = await getHoldings(addresses, lastHoldingsAddresses)
-  const holdings12 = await getHoldings(addresses, currentHoldingsAddresses)
-  const {payouts, debug} = calcPayouts(addresses, voters, total, percent, holdings11, holdings12, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
+
+  let lastHoldings;
+  let currentHoldings;
+  try {
+    lastHoldings = await getHoldings(addresses, lastHoldingsAddresses)
+    currentHoldings = await getHoldings(addresses, currentHoldingsAddresses)
+  } catch (e) {
+    console.error(`🚨🚨 FAILED to get holdings from snapshot API: try running this script later`)
+  }
+
+  const {payouts, debug} = calcPayouts(addresses, voters, total, percent, lastHoldings, currentHoldings, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
   const debugCSV = parseJSONToCSV(debug)
-  writeCSV(debugCSV)
+  writeJSON(debug, `bribe-payouts-${currentHoldingsAddresses}.json`)
+  writeCSV(debugCSV, `bribe-payouts-${currentHoldingsAddresses}.csv`)
 }
 
 /**
@@ -435,12 +472,10 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
   const payouts = []
   const debug = []
   for (let i = 0; i < addresses.length && (limit == null ? true : i < limit) ; i += 1) {
-
     let a = addresses[i]
     let currentHoldings = currentHoldingsAddresses[a] || 0
     let lastHoldings = lastHoldingsAddresses[a] || 0
-    let lastWeekPayout = lastPayouts[a]
-    if (!lastPayouts[a]) lastWeekPayout = 0
+    let lastWeekPayout = lastPayouts[a] || 0
     let dif = currentHoldings - (lastHoldings + lastWeekPayout) // a negative holding means that a used
     let basicBribe = voters[a]/total * 100 * percent * cre8rBasicPayoutperPercent 
     // totalPayoutAtBasic = percent * 100 * cre8rBasicPayoutperPercent 
@@ -496,7 +531,7 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
       }
     }
 
-    console.log(debugBribes)
+    // console.log(debugBribes)
     debug.push({address: debugBribes.address, in: '',...debugBribes.in,out: '', ...debugBribes.out})
     payouts.push({address: a, payout: payoutUSD})
   }
@@ -526,17 +561,25 @@ process.argv.forEach(function (val, index, array) {
   // 2 is variable
 });
 
-const beetsBlockRound10 = 38001572
+
 const beetsBlockRound11 = 39001234
-//beets -> cre8r
-const afterBeetsBlockRound11 = 39320899
-const beetsBlockRound12 = 40013791 // 8 days ago
-const currentBlock = 40631347 // now
-const proposalId = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268";
+const beetsBlockRound12 = 40013791 
+const proposalId12 = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268";
+const cre8rPrice = 0.0158
 
 (async () => {
-  main(beetsBlockRound11, beetsBlockRound12, proposalId, pool, await getLastPayout("txHash goes here but this is currently hardcoded") , undefined, 0.0158) //todo - dynamically get cre8r price
+  main(beetsBlockRound11, beetsBlockRound12, proposalId12, pool , undefined, cre8rPrice) //todo - dynamically get cre8r price
 })()
 //todo - read about best practices when writing scripts like this, (testing, coverage, readable)
 
-//node ./packages/react-app/src/scripts/generatePayouts.js
+//`yarn payouts` to run the script
+
+
+//This file writes the file `data-${timestamp}.csv`
+/*
+
+So if we are doing payout for beets block round 11 to round 12, the bribe-payouts-40013791.csv
+40013791 is the block number of round 12
+
+`bribe-payouts-${currentHoldingsAddresses}.csv`
+*/
