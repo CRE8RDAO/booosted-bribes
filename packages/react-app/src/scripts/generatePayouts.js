@@ -417,7 +417,18 @@ function writeCSV(csv, name) {
   fs.pat
 } 
 
-async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 1041) {
+async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 742) {
+  // console.log paramaters used in main function 
+  console.log(`lastHoldingsAddresses: ${lastHoldingsAddresses}`)
+  console.log(`currentHoldingsAddresses: ${currentHoldingsAddresses}`)
+  console.log(`proposalId: ${proposalId}`)
+  console.log(`pool: ${pool}`)
+  console.log(`limit: ${limit}`)
+  console.log(`cre8rPrice: ${cre8rPrice}`)
+  console.log(`cre8rBasicPayoutperPercent: ${cre8rBasicPayoutperPercent}`)
+  // calculate the average payoutUSD
+  
+  
   let lastPayouts;
   if (lastHoldingsAddresses == beetsBlockRound11) {
     lastPayouts = getLastPayoutRound11();
@@ -450,6 +461,7 @@ async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId,
 
   const {payouts, debug} = calcPayouts(addresses, voters, total, percent, lastHoldings, currentHoldings, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
   const debugCSV = parseJSONToCSV(debug)
+  // 
   writeJSON(debug, `bribe-payouts-${currentHoldingsAddresses}.json`)
   writeCSV(debugCSV, `bribe-payouts-${currentHoldingsAddresses}.csv`)
 }
@@ -561,14 +573,15 @@ process.argv.forEach(function (val, index, array) {
   // 2 is variable
 });
 
-
+const beetsBlockRound13 = 41098725
 const beetsBlockRound11 = 39001234
 const beetsBlockRound12 = 40013791 
-const proposalId12 = "0x6f80a89e26ded765bf6b88400cf9b772f2a5dc3b34524cc1ef9e73324b9c5268";
+const proposalId13 = "0x6e0973f4061c83b40ed8397bf7518e50c8519fd860b8e2476d7733bf71c4d0a9";
 const cre8rPrice = 0.0158;
+const basicBribe = 742;
 
 (async () => {
-  main(beetsBlockRound11, beetsBlockRound12, proposalId12, pool , undefined, cre8rPrice) //todo - dynamically get cre8r price
+  main(beetsBlockRound12, beetsBlockRound13, proposalId13, pool , undefined, cre8rPrice, basicBribe) //todo - dynamically get cre8r price
 })()
 //todo - read about best practices when writing scripts like this, (testing, coverage, readable)
 
