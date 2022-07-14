@@ -598,3 +598,10 @@ So if we are doing payout for beets block round 11 to round 12, the bribe-payout
 
 `bribe-payouts-${currentHoldingsAddresses}.csv`
 */
+
+//todo tests
+/*
+sum the payout in usd should be the same as the percentage of the vote times the basic bribes
+
+
+*/
