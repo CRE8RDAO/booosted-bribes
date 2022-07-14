@@ -244,6 +244,7 @@ const getPercentAndPoolPos = async (proposalId, pool) => {
         }
       }
       const percent = percentVotes[pool];
+      console.log(poolPos)
       return {percent, poolPos: poolPos.toString()}
     }
     throw new Error('percent not found, check if you have a valid proposal id')
@@ -449,7 +450,7 @@ async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId,
   
   const {percent, poolPos} = await getPercentAndPoolPos(proposalId, pool);
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
-
+  console.log(addresses.length , "asdfasdf")
   let lastHoldings;
   let currentHoldings;
   try {
@@ -576,12 +577,13 @@ process.argv.forEach(function (val, index, array) {
 const beetsBlockRound13 = 41098725
 const beetsBlockRound11 = 39001234
 const beetsBlockRound12 = 40013791 
-const proposalId13 = "0x6e0973f4061c83b40ed8397bf7518e50c8519fd860b8e2476d7733bf71c4d0a9";
-const cre8rPrice = 0.0158;
-const basicBribe = 742;
+const beetsBlockRound14 = 42006392
+const proposalId14 = "0x9e89981a236c0de1aa0876eabc95537f7b2b33779c0942a81a5e5d0accc32a56";
+const cre8rPrice = 0.01145;
+const basicBribe = 742.9;
 
 (async () => {
-  main(beetsBlockRound12, beetsBlockRound13, proposalId13, pool , undefined, cre8rPrice, basicBribe) //todo - dynamically get cre8r price
+  main(beetsBlockRound13, beetsBlockRound14, proposalId14, pool , undefined, cre8rPrice, basicBribe) //todo - dynamically get cre8r price
 })()
 //todo - read about best practices when writing scripts like this, (testing, coverage, readable)
 
