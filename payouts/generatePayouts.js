@@ -402,7 +402,7 @@ function convertJSONToPayoutInfo (data) {
  */
 function writeJSON(json, name) {
   let data = JSON.stringify(json);
-  fs.writeFileSync(path.resolve(__dirname, "../../../../payouts", name) || 'data.json', data);
+  fs.writeFileSync(path.resolve(__dirname, "../payouts", name) || 'data.json', data);
   console.log(`json written to ${name || 'data.json'}`)
 } 
 
@@ -413,7 +413,7 @@ function writeJSON(json, name) {
  */
 function writeCSV(csv, name) {
   // let data = JSON.stringify(csv);
-  fs.writeFileSync(path.resolve(__dirname, "../../../../payouts", name) || 'data.csv', csv);
+  fs.writeFileSync(path.resolve(__dirname, "../payouts", name) || 'data.csv', csv);
   console.log(`csv written to ${name || 'data.csv'}`)
   fs.pat
 } 
@@ -436,10 +436,10 @@ async function main(lastHoldingsAddresses, currentHoldingsAddresses, proposalId,
   } else {
     let lastPayoutsData;
     try {
-      lastPayoutsData = require(path.resolve(__dirname, "../../../../payouts", `bribe-payouts-${lastHoldingsAddresses}.json`))
+      lastPayoutsData = require(path.resolve(__dirname, "../payouts", `bribe-payouts-${lastHoldingsAddresses}.json`))
     } catch(e) {
       console.log(e)
-      console.error(`\n 🚨🚨🚨🚨🚨🚨 ERROR 🚨🚨🚨🚨🚨🚨 \n \n 🚨Make sure that ${path.resolve(__dirname, "../../../../payouts", `bribe-payouts-${lastHoldingsAddresses}.json`)} exists.🚨
+      console.error(`\n 🚨🚨🚨🚨🚨🚨 ERROR 🚨🚨🚨🚨🚨🚨 \n \n 🚨Make sure that ${path.resolve(__dirname, "../payouts", `bribe-payouts-${lastHoldingsAddresses}.json`)} exists.🚨
       \n
       When you run this script, it generates a json with the csv as metadata so that it can get the last snapshots payout.
       `)
