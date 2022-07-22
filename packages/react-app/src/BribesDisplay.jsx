@@ -1,19 +1,12 @@
-import { Alert, Button, Card, Code, Span, Checkbox, Input, notification, Radio, Space, Typography, Collapse, Select } from "antd"
-import { ethers } from "ethers"
 import React, { useEffect, useState } from "react"
-import { useHistory, useLocation } from "react-router-dom"
-import { useLocalStorage } from "./hooks"
-import { AddressInput } from "./components"
+import { Card, Collapse, Select, Typography } from "antd"
 import { useUserAddress } from "eth-hooks"
+import React, { useEffect, useState } from "react"
 import useBribe from "./hooks/Bribe"
-import { calculateBasicBoosted } from "./helpers/bribeMath"
-import { amountToLpToGetBasicBoosted } from "./helpers/bribeMath"
-import { Swap } from "./components";
-import { useQuery, gql } from '@apollo/client';
-import { usePercent} from './hooks/Bribe/Percent'
-import { useVotes } from "./hooks/Bribe/Votes"
 import useHoldings from './hooks/Bribe/Holdings'
 import useLastPayout from './hooks/Bribe/LastPayout'
+import { usePercent } from './hooks/Bribe/Percent'
+import { useVotes } from "./hooks/Bribe/Votes"
 const { Text } = Typography
 const { Panel } = Collapse
 const { Option } = Select
