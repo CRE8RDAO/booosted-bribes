@@ -145,7 +145,7 @@ export const bribeSettings = {
 }
 //const blockNumber = useBlockNumber(props.provider);
 
- export const BLOCKNUMBER = 42006392;  // change to latest block that using the thing we looked at the other day. 
+ export const BLOCKNUMBER = 43050170;  // change to latest block that using the thing we looked at the other day. 
 //export const BLOCKNUMBER = blockNumber;
 //console.log("test blockbumber:", blockNumber)
 export const BEETS_PROPOSALS = [
