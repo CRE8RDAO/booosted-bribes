@@ -25,6 +25,7 @@ import {
   useQuery,
   gql
 } from "@apollo/client";
+import { BLOCKNUMBER } from "./config";
 
 
 const tagManagerArgs = {
@@ -230,7 +231,7 @@ function App() {
               <GithubOutlined />
             </a>
           {cre8rScore ? <span>Your CRE8R Holdings across Fantom Pools and Vaults <span style={{color: 'green'}}>${Math.round(cre8rScore*0.15)}</span> </span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
-          {beetsScore ? <span>Your $FBEETS voting power as of block #43050170: <span style={{color: 'green'}}>{Math.round(beetsScore)}</span></span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
+          {beetsScore ? <span>Your $FBEETS voting power as of block #{BLOCKNUMBER}: <span style={{color: 'green'}}>{Math.round(beetsScore)}</span></span> : <span> Connect a wallet that voted to view your CRE8R Voting Power</span>}
             <a href="https://cre8r.vip/boosted-bribes/" target="_blank">
               🧱 Boosted Bribes™ {" "}
             </a>
