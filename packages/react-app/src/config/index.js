@@ -1,6 +1,12 @@
 import addresses from "../addresses";
 import { usePoller, useBlockNumber } from "eth-hooks";
 
+export const BLOCKNUMBER = 43050170;  // https://snapshot.org/#/beets.eth // change to latest block that using the thing we looked at the other day. 
+export const BASICBRIBEFOR100 = 64773.488; // https://docs.google.com/spreadsheets/d/1ex4qMXnqAmjMrbYxLbVLqvQgg0REQ0_r3RIcHMIMfKA/edit#gid=0
+export const TOTALVOTINGPOWER = 83957874; // https://ftmscan.com/token/0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1?a=0xc6fe438c3d3e9b9e18e6fa47921b04eca19dcc57
+export const CRE8R_FTM_LP_PRICE = 0.15;  // https://app.spiritswap.finance/#/farms/allfarms -> search for cre8r (cre8r-ftm lp)
+
+
 export const CRE8R = 'cre8r.eth';
 export const BEETS = 'beets.eth';
 export const FTM = 'fantom';
@@ -143,13 +149,3 @@ export const bribeSettings = {
     network: network[FTM]
   }
 }
-//const blockNumber = useBlockNumber(props.provider);
-
- export const BLOCKNUMBER = 43050170;  // change to latest block that using the thing we looked at the other day. 
-//export const BLOCKNUMBER = blockNumber;
-//console.log("test blockbumber:", blockNumber)
-export const BEETS_PROPOSALS = [
-  0,1,2,3,4,5,6,7,
-  "0x913940146e7d5ad7587d138348bc1a1f34c75e57f3a377cfbba862a084c0ed12", //round 8
-  "0x52dae6401830de2baf203c921aa064839157e11dfb4fd1472b380ad58511c9ca", // round 9
-]
