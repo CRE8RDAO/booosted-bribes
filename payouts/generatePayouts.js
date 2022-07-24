@@ -15,6 +15,18 @@ const {
   parseJSONToCSV
 } = require('./utils')
 
+function test1(payouts, percent, basicBribe) {
+  const percentAsPercent = (percent*100).toFixed(2)
+  const payoutIfOnlyBasicBribe = percentAsPercent * basicBribe
+  const actualPayout = payouts.reduce((p, c) => p + c.payout, 0);
+  console.log(`percent vote is: ${percentAsPercent}%`)
+  console.log(`payout if only basic bribe: $${payoutIfOnlyBasicBribe.toFixed(2)}`)
+  console.log(`actual payout (boosted bribes): $${actualPayout.toFixed(2)}`)
+  const totalBeetsEmissionsToFarms = 727792
+  const beetsPrice = 0.09
+  console.log(`Assuming beets price is $${beetsPrice}, and ${totalBeetsEmissionsToFarms} beets * percentVote are emitted to cre8r-ftm farm, value of beets generated: $${(beetsPrice*totalBeetsEmissionsToFarms*percent).toFixed(2)}`)
+}
+
 async function main(holdingsLastRound, holdingsCurrentRound, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 742) {
   // console.log paramaters used in main function 
   console.log(`holdingsLastRound: ${holdingsLastRound}`)
@@ -44,6 +56,8 @@ async function main(holdingsLastRound, holdingsCurrentRound, proposalId, pool, l
   }
 
   const {payouts, debug} = calcPayouts(addresses, voters, total, percent, lastHoldings, currentHoldings, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
+
+  test1(payouts, percent, basicBribe);
   const debugCSV = parseJSONToCSV(debug)
   // 
   writeJSON(debug, `bribe-payouts-${holdingsCurrentRound}.json`)
