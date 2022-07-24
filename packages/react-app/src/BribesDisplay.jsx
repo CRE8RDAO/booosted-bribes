@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Card, Collapse, Select, Typography } from "antd"
 import { useUserAddress } from "eth-hooks"
-import React, { useEffect, useState } from "react"
 import useBribe from "./hooks/Bribe"
 import useHoldings from './hooks/Bribe/Holdings'
 import useLastPayout from './hooks/Bribe/LastPayout'

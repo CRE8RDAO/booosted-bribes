@@ -1,4 +1,4 @@
-import {TOTALVOTINGPOWER, BASICBRIBEFOR100} from '../config'
+import {TOTALVOTINGPOWER, BASICBRIBEFOR100, CRE8R_FTM_LP_PRICE} from '../config'
 /**
  * 
  * @param {*} beetsScore 

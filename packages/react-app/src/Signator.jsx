@@ -9,7 +9,7 @@ import useBribe from "./hooks/Bribe"
 import { calculateBasicBoosted } from "./helpers/bribeMath"
 import { amountToLpToGetBasicBoosted } from "./helpers/bribeMath"
 import { Swap } from "./components";
-
+import { CRE8R_FTM_LP_PRICE } from './config'
 const { Text } = Typography
 const { Panel } = Collapse
 const { Option } = Select
