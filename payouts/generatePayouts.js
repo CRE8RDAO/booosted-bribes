@@ -2,7 +2,7 @@ const {
   getHoldings,
   getVotes,
   getPercentAndPoolPos,
-  getLastPayout
+  getLastPayoutinCRE8R
 } = require('./data')
 
 const {
@@ -15,7 +15,7 @@ const {
   parseJSONToCSV
 } = require('./utils')
 
-function test1(payouts, percent, basicBribe) {
+function consoleLogResults(payouts, percent, basicBribe) {
   const percentAsPercent = (percent*100).toFixed(2)
   const payoutIfOnlyBasicBribe = percentAsPercent * basicBribe
   const actualPayout = payouts.reduce((p, c) => p + c.payout, 0);
@@ -27,7 +27,7 @@ function test1(payouts, percent, basicBribe) {
   console.log(`Assuming beets price is $${beetsPrice}, and ${totalBeetsEmissionsToFarms} beets * percentVote are emitted to cre8r-ftm farm, value of beets generated: $${(beetsPrice*totalBeetsEmissionsToFarms*percent).toFixed(2)}`)
 }
 
-async function main(holdingsLastRound, holdingsCurrentRound, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 742) {
+async function main(holdingsLastRound, holdingsCurrentRound, proposalId, pool, limit, cre8rPrice = 0.03212, cre8rBasicPayoutperPercent = 742, hasBonanza) {
   // console.log paramaters used in main function 
   console.log(`holdingsLastRound: ${holdingsLastRound}`)
   console.log(`holdingsCurrentRound: ${holdingsCurrentRound}`)
@@ -39,7 +39,7 @@ async function main(holdingsLastRound, holdingsCurrentRound, proposalId, pool, l
   // calculate the average payoutUSD
   
   
-  let lastPayouts = getLastPayout(holdingsLastRound)
+  let lastPayouts = getLastPayoutinCRE8R(holdingsLastRound)
   
   const {percent, poolPos} = await getPercentAndPoolPos(proposalId, pool);
   const {voters, total, addresses} = await getVotes(proposalId, poolPos)
@@ -55,9 +55,10 @@ async function main(holdingsLastRound, holdingsCurrentRound, proposalId, pool, l
     throw 'Error with getHoldings'
   }
 
-  const {payouts, debug} = calcPayouts(addresses, voters, total, percent, lastHoldings, currentHoldings, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit)
+  const {payouts, debug} = calcPayouts(addresses, voters, total, percent, lastHoldings, currentHoldings, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit, hasBonanza)
 
-  test1(payouts, percent, basicBribe);
+  consoleLogResults(payouts, percent, basicBribe);
+
   const debugCSV = parseJSONToCSV(debug)
   // 
   writeJSON(debug, `bribe-payouts-${holdingsCurrentRound}.json`)
@@ -82,11 +83,15 @@ const proposalIds = [
   "0x9e89981a236c0de1aa0876eabc95537f7b2b33779c0942a81a5e5d0accc32a56", //14
   "0x9b3b328e77e2d5b99a26ede7b4f6c36ee0bf6b4c06241e84f50f01735270d6e9", //15
 ]
+const hasBonanza = [
+  false, //15
+]; //when price goes up 
+
 const poolChoiceName = "CRE8R in F-Major (CRE8R-FTM)"
 
 const cre8rPrice = 0.01602;
 const basicBribe = 647.7; 
-main(beetsBlockRounds[beetsBlockRounds.length-2], beetsBlockRounds[beetsBlockRounds.length-1], proposalIds[proposalIds.length-1], poolChoiceName, undefined, cre8rPrice, basicBribe).then(() => {
+main(beetsBlockRounds[beetsBlockRounds.length-2], beetsBlockRounds[beetsBlockRounds.length-1], proposalIds[proposalIds.length-1], poolChoiceName, undefined, cre8rPrice, basicBribe, hasBonanza[hasBonanza.length - 1]).then(() => {
   process.exit(0);
 }).catch((error) => {
   console.error(error);

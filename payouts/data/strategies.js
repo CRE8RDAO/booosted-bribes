@@ -1,3 +1,6 @@
+/**
+ * Note: These strategies are weighted in units of the cre8r-ftm lp token on spirit
+ */
 module.exports = {
   network: 250,
   strategies: [
@@ -19,22 +22,22 @@ module.exports = {
       "network": "250",
       "params": {
       "address": "0xbbB192f66256002C96Dae28770b2622DB41d56Cc",
-      "symbol": "OLA",
+      "symbol": "OLA", //Why is this called OLA?
       "decimals": 18
     }
     },
-    { 
-      "name": "erc20-balance-of",
+    {  //CRE8R DAO token
+      "name": "erc20-balance-of-weighted",
       "network": "250",
       "params": {
         "address": "0x2aD402655243203fcfa7dCB62F8A08cc2BA88ae0",  // add CRE8R but also gotta add beets back in
-          "symbol": "CRE8R",
+          "symbol": "CRE8R", 
           "decimals": 18,
-          "weight": 0.12
+          "weight": 0.12 // todo make dynamic
     }
     },
     {
-      "name": "erc20-balance-of-weighted",
+      "name": "erc20-balance-of-weighted", //CRE8R In F-Major Beethoven-X Crypt (rf-BPT-CR...)
       "network": "250",
       "params": {
         "symbol": "reaper",
@@ -44,7 +47,7 @@ module.exports = {
       }
     },
     {
-      "name": "erc20-balance-of-weighted",
+      "name": "erc20-balance-of-weighted", // Moo Spirit FTM-CRE8R (mooSpirit...)
       "network": "250",
       "params": {
         "symbol": "moo",
@@ -54,7 +57,7 @@ module.exports = {
       }
     },
     {
-      "name": "erc20-balance-of-weighted",
+      "name": "erc20-balance-of-weighted", // BELUGA SPIRIT-LP (bSPIRIT-LP)
       "network": "250",
       "params": {
         "symbol": "beluga",

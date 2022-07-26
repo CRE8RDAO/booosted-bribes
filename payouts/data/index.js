@@ -26,7 +26,7 @@ const client = new ApolloClient({
 function getHoldings(addresses, blockNumber) {
   return snapshot.utils.getScores(
     'cre8r',
-    [...bribeSettings.strategies],
+    [...bribeSettings.strategies], 
     bribeSettings.network,
     [...addresses],
     blockNumber
@@ -46,6 +46,7 @@ function getHoldings(addresses, blockNumber) {
     }
   }
   for (let i = 0; i < Object.keys(holdings).length; i++) {
+    //todo: pull dynamically
     holdings[Object.keys(holdings)[i]] *= 8.2 //converting vp to cre8r
   } 
     return holdings
@@ -161,13 +162,13 @@ const getPercentAndPoolPos = async (proposalId, pool) => {
  * @returns payout in cre8r on round 11
  */
 function getLastPayoutRound11() {
-  return require('./round11AddressesToPayout')
+  return require('./round11AddressesToPayout') / 0.011 // about the cre8r price at round 11
 }
 
-function convertJSONToPayoutInfo (data) {
+function convertJSONToPayoutCRE8RInfo (data) {
   let payoutData = {}
   for (let i = 0; i < data.length; i++) {
-    payoutData[data[i].address] = data[i].payoutUSD
+    payoutData[data[i].address] = data[i].payoutCre8r
   }
   return payoutData
 }
@@ -177,9 +178,9 @@ const beetsBlockRound11 = 39001234
 /**
  * 
  * @param {*} lastHoldingsAddresses 
- * @returns lastPayouts
+ * @returns lastPayouts in cre8r
  */
-function getLastPayout(lastHoldingsAddresses) {
+function getLastPayoutinCRE8R(lastHoldingsAddresses) {
   if (lastHoldingsAddresses == beetsBlockRound11) {
     return getLastPayoutRound11();
   } else {
@@ -195,7 +196,7 @@ function getLastPayout(lastHoldingsAddresses) {
       throw 'ERROR ^^^'
       return;
     }
-    return convertJSONToPayoutInfo(lastPayoutsData);
+    return convertJSONToPayoutCRE8RInfo(lastPayoutsData);
   }
 }
 
@@ -256,11 +257,11 @@ async function getSpiritLPCRE8R (){
 
 // getCRE8RPrice()
 //getFTMPrice()
-getSpiritLPCRE8R()
+// getSpiritLPCRE8R()
 module.exports = {
   getHoldings,
   getVotes,
   getPercentAndPoolPos,
-  convertJSONToPayoutInfo,
-  getLastPayout
+  convertJSONToPayoutCRE8RInfo,
+  getLastPayoutinCRE8R
 }
