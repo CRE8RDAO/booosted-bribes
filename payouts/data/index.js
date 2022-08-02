@@ -235,7 +235,7 @@ async function getTotalSupply(provider, erc20Abi, erc20Address) {
   return await contract.totalSupply();
 }
 function convertPriceToBigNumber(price) {
-  return (parseFloat(price.toString()).toFixed(5)*1e18).toString()
+  return parseFloat(price.toString()).toFixed(5)*1e18
 }
 async function getSpiritLPCRE8R (){
   const provider = new ethers.providers.JsonRpcProvider("https://rpcapi.fantom.network");
@@ -246,8 +246,8 @@ async function getSpiritLPCRE8R (){
   const ftmBalance = await getTokenBalance(provider, ERC20_ABI, ftmAddress, spiritLPCRE8rAddress)
   const cre8rBalance = await getTokenBalance(provider, ERC20_ABI, cre8rAddress, spiritLPCRE8rAddress)
   const circulatingSupply = await getTotalSupply(provider, ERC20_ABI, spiritLPCRE8rAddress);
-  const cre8rPrice = convertPriceToBigNumber(await getCRE8RPrice());
-  const ftmPrice = convertPriceToBigNumber(await getFTMPrice());
+  const cre8rPrice = convertPriceToBigNumber(await getCRE8RPrice()).toString();
+  const ftmPrice = convertPriceToBigNumber(await getFTMPrice()).toString();
   const spiritLPCRE8RPrice = calculateLPTokenPriceInUSD(circulatingSupply, ftmBalance, ftmPrice, cre8rBalance, cre8rPrice);
 
   console.log(`cre8rPrice: ${ethers.utils.formatUnits(cre8rPrice, 18)}`)
@@ -255,9 +255,47 @@ async function getSpiritLPCRE8R (){
   console.log(`spiritLPCRE8RPrice: ${ethers.utils.formatUnits(spiritLPCRE8RPrice, 18)}`)
 }
 
+
+const beetsClient = new ApolloClient({
+  link: new HttpLink({ uri: 'https://backend.beets-ftm-node.com/graphql', fetch }),
+  cache: new InMemoryCache(),
+});
+
+const beetsPoolQuery = gql`
+query BeetsPool($id: String!) {
+  pool (id: $id){
+    totalShares
+    tokensList
+    totalLiquidity
+  
+  }
+}
+
+`
+
+async function getBeetsLPCRE8R () {
+  const poolId = "0xbb4607bede4610e80d35c15692efcb7807a2d0a6000200000000000000000140"
+  const { loading, error, data } = await beetsClient.query({
+    query: beetsPoolQuery,
+    variables: {
+      "id": poolId
+    }
+  })
+  if (data) {
+    console.log(`lpCRE8RBeets: ${parseFloat(data.pool.totalLiquidity)/parseFloat(data.pool.totalShares)}`)
+  } else {
+    console.error(error)
+  }
+  // console.log(`cre8rPrice: ${ethers.utils.formatUnits(cre8rPrice, 18)}`)
+  // console.log(`ftmPrice: ${ethers.utils.formatUnits(ftmPrice, 18)}`)
+  // console.log(`lpCRE8RBeets: ${ethers.utils.formatUnits(spiritLPCRE8RPrice, 18)}`)
+}
+
 // getCRE8RPrice()
 //getFTMPrice()
 // getSpiritLPCRE8R()
+
+getBeetsLPCRE8R()
 module.exports = {
   getHoldings,
   getVotes,

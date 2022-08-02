@@ -91,6 +91,7 @@ const poolChoiceName = "CRE8R in F-Major (CRE8R-FTM)"
 
 const cre8rPrice = 0.01602;
 const basicBribe = 647.7; 
+//NOTE: for round 16, need to use the payouts for the bribe payouts of `bugged-this was paid out` but then use the correct vp balance
 main(beetsBlockRounds[beetsBlockRounds.length-2], beetsBlockRounds[beetsBlockRounds.length-1], proposalIds[proposalIds.length-1], poolChoiceName, undefined, cre8rPrice, basicBribe, hasBonanza[hasBonanza.length - 1]).then(() => {
   process.exit(0);
 }).catch((error) => {

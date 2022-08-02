@@ -4,20 +4,20 @@
 module.exports = {
   network: 250,
   strategies: [
-    {
+    { //beets balance on chain //cre8r in f major pool
       "name": "masterchef-pool-balance",
       "network": "250",
       "params": {
         "pid": "39",
         "symbol": "BEETSLP -> SLP",
-        "weight": 172,
+        "weight": 172, // to change to weight one
         "tokenIndex": null,
         "chefAddress": "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3",
         "uniPairAddress": null,
         "weightDecimals": 3
       }
     },
-    { 
+    { //check if users have balances in ola: https://ola.finance/
       "name": "erc20-balance-of",
       "network": "250",
       "params": {
