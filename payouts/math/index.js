@@ -39,11 +39,11 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
       basicBoost = basicBribe * 1.1
     }
   
-    if (currentHoldings * 1.2 >= lastHoldings + lastWeekPayoutInCRE8R) {
+    if (basicBoost && currentHoldings * 1.2 >= lastHoldings + lastWeekPayoutInCRE8R) {
       boostedBribe = basicBribe * 1.25
     }
-  
-    if (currentHoldings > lastWeekPayoutInCRE8R + lastHoldings*1.35) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
+    console.log('BASICBOOST REQUIREMENT FOR HIGHER TIER ENABLED')
+    if (basicBoost && currentHoldings > lastWeekPayoutInCRE8R + lastHoldings*1.35) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
       boostedBonus = basicBribe * 1.35
       if (hasBonanza) {
         boostedBonanza = basicBribe * 1.6
