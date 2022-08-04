@@ -1,14 +1,14 @@
 /**
  * 
- * @param {*} addresses 
- * @param {*} voters 
- * @param {*} total 
- * @param {*} percent 
- * @param {*} holdings11 
- * @param {*} holdings12 
- * @param {*} lastPayouts in cre8r
- * @param {*} cre8rPrice 
- * @param {*} cre8rBasicPayoutperPercent 
+ * @param {string[]} addresses 
+ * @param {{[address: string]: number}} voters fBeets voter voted on cre8r for
+ * @param {number} total total fBeets that voted for cre8r
+ * @param {*} percent - percent vote won for beets snapshot in decimal
+ * @param {{[address: string]: number}} lastHoldingsAddresses addresses -> holdings
+ * @param {{[address: string]: number}} currentHoldingsAddresses addresses -> holdings
+ * @param {{[address: string]: number}} lastPayouts addresses -> lastPayout in cre8r
+ * @param {*} cre8rPrice in USD 
+ * @param {*} cre8rBasicPayoutperPercent in USD, this is the basic bribe paid per a percent of the vote
  * @param {*} limit 
  * @returns {{payout: any, address: any}}
  */
@@ -22,7 +22,7 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
     let lastWeekPayoutInCRE8R = lastPayouts[a] || 0
     let dif = currentHoldings - (lastHoldings + lastWeekPayoutInCRE8R) // a negative holding means that a used
     let basicBribe = voters[a]/total * 100 * percent * cre8rBasicPayoutperPercent 
-    // totalPayoutAtBasic = percent * 100 * cre8rBasicPayoutperPercent 
+    // totalPayoutAtBasicToAllCre8rVoters = 100 * percent * cre8rBasicPayoutperPercent 
     // basicBribe = ratio / cre8rPrice * percent * cre8rBasicPayoutperPercent
     //payouts
     let bogusestBribe = 0

@@ -295,7 +295,7 @@ async function getBeetsLPCRE8R () {
 //getFTMPrice()
 // getSpiritLPCRE8R()
 
-getBeetsLPCRE8R()
+// getBeetsLPCRE8R()
 module.exports = {
   getHoldings,
   getVotes,
