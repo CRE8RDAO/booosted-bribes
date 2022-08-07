@@ -45,40 +45,42 @@ function calcPayouts(
     let boostedBonus = 0
     let boostedBonanza = 0
 
+      //payouts $AMP
+      let basicBoost2 = 0;
+      let boostedBonus2 = 0;
+
     if (dif <= -currentHoldings * .04) { //why do we need the &&? could we remove currentHoldings?
       bogusestBribe = basicBribeUSD * 0.5
-    }
-    const hasLp3x = currentHoldings * (1 - MARGIN_OF_ERROR) > (basicBribeUSD*3)
-    if (hasLp3x && lastWeekPayoutInCRE8R == 0) {
-      basicBoost = basicBribeUSD * 1.1
-    }
-    
-    if (hasLp3x && currentHoldings * 1.2  * (1 - MARGIN_OF_ERROR) >= lastHoldings + lastWeekPayoutInCRE8R) {
-      boostedBribe = basicBribeUSD * 1.25
-    }
-    if (hasLp3x && currentHoldings * (1 - MARGIN_OF_ERROR) > (lastWeekPayoutInCRE8R + lastHoldings) * 1.35) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
-      boostedBonus = basicBribeUSD * 1.35
-      if (hasBonanza) {
-        boostedBonanza = basicBribeUSD * 1.6
+    } else {
+      const hasLp3x = currentHoldings * (1 - MARGIN_OF_ERROR) > (basicBribeUSD*3)
+      if (hasLp3x && lastWeekPayoutInCRE8R == 0) {
+        basicBoost = basicBribeUSD * 1.1
       }
-    }
-    //payouts $AMP
-    let basicBoost2 = 0;
-    let boostedBonus2 = 0;
-
-    if (hasLp3x) {
-      const ratioLP = currentHoldings / basicBribeUSD
-      const multiplierLP = (Math.min(6, (ratioLP)) - 3) * 1/3
-      basicBoost2 = Math.max(0, multiplierLP * basicBribeUSD * 1.1) //basicBoost = basicBribeUSD * 1.1
-
-      const ratioHoldings = currentHoldings / lastHoldings
-      const multiplierHoldings = (Math.min(2, ratioHoldings) - 1.35) * 1 / 1.65 / 2
-      // boostedBonus2 += multiplierHoldings * boostedBonus //extra bonus
       
-      const excessCre8r = Math.max(0, currentHoldings - (lastHoldings + lastWeekPayoutInCRE8R)*1.35)
-      
-      boostedBonus2 = Math.max(0, multiplierHoldings * excessCre8r * cre8rPrice)
-      
+      if (hasLp3x && currentHoldings * 1.2  * (1 - MARGIN_OF_ERROR) >= lastHoldings + lastWeekPayoutInCRE8R) {
+        boostedBribe = basicBribeUSD * 1.25
+      }
+      if (hasLp3x && currentHoldings * (1 - MARGIN_OF_ERROR) > (lastWeekPayoutInCRE8R + lastHoldings) * 1.35) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
+        boostedBonus = basicBribeUSD * 1.35
+        if (hasBonanza) {
+          boostedBonanza = basicBribeUSD * 1.6
+        }
+      }
+  
+      if (hasLp3x) {
+        const ratioLP = currentHoldings / basicBribeUSD
+        const multiplierLP = (Math.min(6, (ratioLP)) - 3) * 1/3
+        basicBoost2 = Math.max(0, multiplierLP * basicBribeUSD * 1.1) //basicBoost = basicBribeUSD * 1.1
+  
+        const ratioHoldings = currentHoldings / lastHoldings
+        const multiplierHoldings = (Math.min(2, ratioHoldings) - 1.35) * 1 / 1.65 / 2
+        // boostedBonus2 += multiplierHoldings * boostedBonus //extra bonus
+        
+        const excessCre8r = Math.max(0, currentHoldings - (lastHoldings + lastWeekPayoutInCRE8R)*1.35)
+        
+        boostedBonus2 = Math.max(0, multiplierHoldings * excessCre8r * cre8rPrice)
+        
+      }
     }
 
 
