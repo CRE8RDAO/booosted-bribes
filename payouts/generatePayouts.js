@@ -78,19 +78,25 @@ const beetsBlockRounds = [
   41098725,//13
   42006392,//14
   43050170,//15
+  //@dunks enter a blockround 3 days after beets round 16
 ]
 const proposalIds = [
   "0x9e89981a236c0de1aa0876eabc95537f7b2b33779c0942a81a5e5d0accc32a56", //14
   "0x9b3b328e77e2d5b99a26ede7b4f6c36ee0bf6b4c06241e84f50f01735270d6e9", //15
+  //@dunks enter proposal id
 ]
 const hasBonanza = [
   false, //15
+  false, //16
 ]; //when price goes up 
 
 const poolChoiceName = "CRE8R in F-Major (CRE8R-FTM)"
 
-const cre8rPrice = 0.01602;
-const basicBribe = 647.7; 
+const cre8rPrice = 0.01602; //@dunks update cre8r price
+const basicBribe = 647.7;  //@dunks check basicbribe price
+
+//@dunks Then run `node payouts/generatePayouts.js`
+
 //NOTE: for round 16, need to use the payouts for the bribe payouts of `bugged-this was paid out` but then use the correct vp balance
 main(beetsBlockRounds[beetsBlockRounds.length-2], beetsBlockRounds[beetsBlockRounds.length-1], proposalIds[proposalIds.length-1], poolChoiceName, undefined, cre8rPrice, basicBribe, hasBonanza[hasBonanza.length - 1]).then(() => {
   process.exit(0);

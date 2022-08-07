@@ -1,70 +1,103 @@
+const MARGIN_OF_ERROR = 0.005 // 0.5% percent
 /**
  * 
  * @param {string[]} addresses 
- * @param {{[address: string]: number}} voters fBeets voter voted on cre8r for
- * @param {number} total total fBeets that voted for cre8r
- * @param {*} percent - percent vote won for beets snapshot in decimal
- * @param {{[address: string]: number}} lastHoldingsAddresses addresses -> holdings
- * @param {{[address: string]: number}} currentHoldingsAddresses addresses -> holdings
- * @param {{[address: string]: number}} lastPayouts addresses -> lastPayout in cre8r
- * @param {*} cre8rPrice in USD 
- * @param {*} cre8rBasicPayoutperPercent in USD, this is the basic bribe paid per a percent of the vote
- * @param {*} limit 
- * @returns {{payout: any, address: any}}
+ * @param {{[address: string]: number}} voterToFBEETS 
+ * @param {number} totalFBeetsVotedForCRE8R 
+ * @param {number} percentVoteForCre8r 
+ * @param {{[address: string]: number}} lastHoldingsAddressesInCRE8R 
+ * @param {{[address: string]: number}} currentHoldingsAddressesInCRE8R 
+ * @param {{[address: string]: number}} lastPayoutsInCRE8R 
+ * @param {number} cre8rPrice 
+ * @param {number} cre8rBasicPayoutperPercent 
+ * @param {number | undefined} limit 
+ * @param {number | undefined} hasBonanza 
+ * @returns 
  */
-function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, currentHoldingsAddresses, lastPayouts, cre8rPrice, cre8rBasicPayoutperPercent, limit, hasBonanza) {
+function calcPayouts(
+  addresses, 
+  voterToFBEETS, 
+  totalFBeetsVotedForCRE8R, 
+  percentVoteForCre8r, 
+  lastHoldingsAddressesInCRE8R, 
+  currentHoldingsAddressesInCRE8R, 
+  lastPayoutsInCRE8R, 
+  cre8rPrice, 
+  cre8rBasicPayoutperPercent, 
+  limit, 
+  hasBonanza
+) {
   const payouts = []
   const debug = []
   for (let i = 0; i < addresses.length && (limit == null ? true : i < limit) ; i += 1) {
-    let a = addresses[i]
-    let currentHoldings = currentHoldingsAddresses[a] || 0
-    let lastHoldings = lastHoldingsAddresses[a] || 0
-    let lastWeekPayoutInCRE8R = lastPayouts[a] || 0
-    let dif = currentHoldings - (lastHoldings + lastWeekPayoutInCRE8R) // a negative holding means that a used
-    let basicBribe = voters[a]/total * 100 * percent * cre8rBasicPayoutperPercent 
-    // totalPayoutAtBasicToAllCre8rVoters = 100 * percent * cre8rBasicPayoutperPercent 
+    const a = addresses[i]
+    const currentHoldings = currentHoldingsAddressesInCRE8R[a] || 0
+    const lastHoldings = lastHoldingsAddressesInCRE8R[a] || 0
+    const lastWeekPayoutInCRE8R = lastPayoutsInCRE8R[a] || 0
+    const dif = currentHoldings - (lastHoldings + lastWeekPayoutInCRE8R) // a negative holding means that a used
+    const basicBribeUSD = voterToFBEETS[a]/totalFBeetsVotedForCRE8R * 100 * percentVoteForCre8r * cre8rBasicPayoutperPercent 
+    // totalPayoutAtBasic = percent * 100 * cre8rBasicPayoutperPercent 
     // basicBribe = ratio / cre8rPrice * percent * cre8rBasicPayoutperPercent
-    //payouts
+    //payouts $CRE8R
     let bogusestBribe = 0
     let basicBoost = 0
     let boostedBribe = 0
     let boostedBonus = 0
     let boostedBonanza = 0
-    let payoutUSD = 0
-    if (dif <= -currentHoldings * .04) { //why do we need the &&? could we remove currentHoldings?
-      bogusestBribe = basicBribe * 0.5
-    }
-  
-    if (currentHoldings > (basicBribe*3) && lastWeekPayoutInCRE8R == 0) {
-      basicBoost = basicBribe * 1.1
-    }
-  
-    if (basicBoost && currentHoldings >= lastHoldings + lastWeekPayoutInCRE8R && lastWeekPayoutInCRE8R != 0) {
-      boostedBribe = basicBribe * 1.25
-    }
 
-    if (basicBoost && currentHoldings > lastWeekPayoutInCRE8R + lastHoldings*1.35  && lastWeekPayoutInCRE8R != 0) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
-      boostedBonus = basicBribe * 1.6
+    if (dif <= -currentHoldings * .04) { //why do we need the &&? could we remove currentHoldings?
+      bogusestBribe = basicBribeUSD * 0.5
+    }
+    const hasLp3x = currentHoldings * (1 - MARGIN_OF_ERROR) > (basicBribeUSD*3)
+    if (hasLp3x && lastWeekPayoutInCRE8R == 0) {
+      basicBoost = basicBribeUSD * 1.1
+    }
+    
+    if (hasLp3x && currentHoldings * 1.2  * (1 - MARGIN_OF_ERROR) >= lastHoldings + lastWeekPayoutInCRE8R) {
+      boostedBribe = basicBribeUSD * 1.25
+    }
+    if (hasLp3x && currentHoldings * (1 - MARGIN_OF_ERROR) > (lastWeekPayoutInCRE8R + lastHoldings) * 1.35) { // currentHoldings > lastHoldings*1.35 + lastWeekPayout
+      boostedBonus = basicBribeUSD * 1.35
       if (hasBonanza) {
-        boostedBonanza = basicBribe * 1.6
+        boostedBonanza = basicBribeUSD * 1.6
       }
     }
+    //payouts $AMP
+    let basicBoost2 = 0;
+    let boostedBonus2 = 0;
 
+    if (hasLp3x) {
+      const ratioLP = currentHoldings / basicBribeUSD
+      const multiplierLP = (Math.min(6, (ratioLP)) - 3) * 1/3
+      basicBoost2 = Math.max(0, multiplierLP * basicBribeUSD * 1.1) //basicBoost = basicBribeUSD * 1.1
+
+      const ratioHoldings = currentHoldings / lastHoldings
+      const multiplierHoldings = (Math.min(2, ratioHoldings) - 1.35) * 1 / 1.65 / 2
+      // boostedBonus2 += multiplierHoldings * boostedBonus //extra bonus
+      
+      const excessCre8r = Math.max(0, currentHoldings - (lastHoldings + lastWeekPayoutInCRE8R)*1.35)
+      
+      boostedBonus2 = Math.max(0, multiplierHoldings * excessCre8r * cre8rPrice)
+      
+    }
+
+
+    let payoutUSD = 0
     if (bogusestBribe) {
       payoutUSD = bogusestBribe
     } else {
-      payoutUSD = Math.max(/*basicBribe,*/ basicBoost, boostedBribe, boostedBonus, boostedBonanza)
+      payoutUSD = Math.max(basicBribeUSD, basicBoost, boostedBribe, boostedBonus, boostedBonanza)
     } 
-    let debugBribes = {
+    const debugBribes = {
       address: a,
       in: {
-        ratio: voters[a]/total,
+        ratio: voterToFBEETS[a]/totalFBeetsVotedForCRE8R,
         currentHoldings,
         lastHoldings,
         lastWeekPayoutInCRE8R,
         dif,
         cre8rPrice,
-        basicBribe
+        basicBribe: basicBribeUSD
       },
       out: {
         bogusestBribe,
@@ -73,7 +106,10 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
         boostedBonus,
         boostedBonanza,
         payoutUSD,
-        payoutCre8r: payoutUSD/cre8rPrice
+        payoutCre8r: payoutUSD/cre8rPrice,
+        payoutCre8rInUSD: payoutUSD,
+        basicBoost2AmpInUSD: basicBoost2,
+        boostedBonus2AmpInUSD: boostedBonus2,
       }
     }
 
@@ -83,6 +119,10 @@ function calcPayouts(addresses, voters, total, percent, lastHoldingsAddresses, c
   }
   return {payouts, debug}
 }
+
+
+
+
 
 /**
  * Assumes that there are only 2 tokens in the lp pool that are of value
