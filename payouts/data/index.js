@@ -174,7 +174,7 @@ function convertJSONToPayoutCRE8RInfo (data) {
 }
 
 const beetsBlockRound11 = 39001234
-
+const FILE_MODE = '-correct-state'
 /**
  * 
  * @param {*} lastHoldingsAddresses 
@@ -186,10 +186,10 @@ function getLastPayoutinCRE8R(lastHoldingsAddresses) {
   } else {
     let lastPayoutsData;
     try {
-      lastPayoutsData = require(path.resolve(__dirname, RELATIVE_PATH, `bribe-payouts-${lastHoldingsAddresses}.json`))
+      lastPayoutsData = require(path.resolve(__dirname, RELATIVE_PATH, `bribe-payouts-${lastHoldingsAddresses}${FILE_MODE}.json`))
     } catch(e) {
       console.log(e)
-      console.error(`\n 🚨🚨🚨🚨🚨🚨 ERROR 🚨🚨🚨🚨🚨🚨 \n \n 🚨Make sure that ${path.resolve(__dirname, RELATIVE_PATH, `bribe-payouts-${lastHoldingsAddresses}.json`)} exists.🚨
+      console.error(`\n 🚨🚨🚨🚨🚨🚨 ERROR 🚨🚨🚨🚨🚨🚨 \n \n 🚨Make sure that ${path.resolve(__dirname, RELATIVE_PATH, `bribe-payouts-${lastHoldingsAddresses}${FILE_MODE}.json`)} exists.🚨
       \n
       When you run this script, it generates a json with the csv as metadata so that it can get the last snapshots payout.
       `)

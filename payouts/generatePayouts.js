@@ -78,11 +78,13 @@ const beetsBlockRounds = [
   41098725,//13
   42006392,//14
   43050170,//15
+  44457923, //16 delayed
   //@dunks enter a blockround 3 days after beets round 16
 ]
 const proposalIds = [
   "0x9e89981a236c0de1aa0876eabc95537f7b2b33779c0942a81a5e5d0accc32a56", //14
   "0x9b3b328e77e2d5b99a26ede7b4f6c36ee0bf6b4c06241e84f50f01735270d6e9", //15
+  "0xbc5785e1323c70986d77d33ab734c1c18f122c2a6082f84fbc437c549d8b84ad", //16
   //@dunks enter proposal id
 ]
 const hasBonanza = [
@@ -92,8 +94,8 @@ const hasBonanza = [
 
 const poolChoiceName = "CRE8R in F-Major (CRE8R-FTM)"
 
-const cre8rPrice = 0.01602; //@dunks update cre8r price
-const basicBribe = 647.7;  //@dunks check basicbribe price
+const cre8rPrice = 0.01385; //@dunks update cre8r price
+const basicBribe = 644.34;  //@dunks check basicbribe price
 
 //@dunks Then run `node payouts/generatePayouts.js`
 
