@@ -94,8 +94,8 @@ const hasBonanza = [
 
 const poolChoiceName = "CRE8R in F-Major (CRE8R-FTM)"
 
-const cre8rPrice = 0.01385; //@dunks update cre8r price
-const basicBribe = 644.34;  //@dunks check basicbribe price
+const cre8rPrice = 0.01334; //@dunks update cre8r price
+const basicBribe = 664.34;  //@dunks check basicbribe price
 
 //@dunks Then run `node payouts/generatePayouts.js`
 
