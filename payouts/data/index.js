@@ -174,7 +174,7 @@ function convertJSONToPayoutCRE8RInfo (data) {
 }
 
 const beetsBlockRound11 = 39001234
-const FILE_MODE = '-correct-state'
+const FILE_MODE = '' // in some cases, manual overrides of the data is required. ex: -correct-state
 /**
  * 
  * @param {*} lastHoldingsAddresses 
