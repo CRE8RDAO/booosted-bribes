@@ -72,6 +72,8 @@ process.argv.forEach(function (val, index, array) {
   // 2 is variable
 });
 
+
+
 const beetsBlockRounds = [
   39001234,//11
   40013791,//12
@@ -110,6 +112,7 @@ main(beetsBlockRounds[beetsBlockRounds.length-2], beetsBlockRounds[beetsBlockRou
   console.error(error);
   process.exit(0);
 })
+
 
 //todo - need to figure out cre8r price logic (ie: how to not punish cre8r voters based on cre8r price changes)
 //todo - read about best practices when writing scripts like this, (testing, coverage, readable)

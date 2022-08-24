@@ -1,4 +1,7 @@
 const MARGIN_OF_ERROR = 0.005 // 0.5% percent
+const vaultAddresses = [
+  "0xeD4DBA0795965119D187DA57E080069Cd3415650"
+]
 /**
  * 
  * @param {string[]} addresses 
@@ -45,9 +48,9 @@ function calcPayouts(
     let boostedBonus = 0
     let boostedBonanza = 0
 
-      //payouts $AMP
-      let basicBoost2 = 0;
-      let boostedBonus2 = 0;
+    //payouts $AMP
+    let basicBoost2 = 0;
+    let boostedBonus2 = 0;
 
     if (dif <= -currentHoldings * .04) { //why do we need the &&? could we remove currentHoldings?
       bogusestBribe = basicBribeUSD * 0.5
@@ -85,7 +88,9 @@ function calcPayouts(
 
 
     let payoutUSD = 0
-    if (bogusestBribe) {
+    if (vaultAddresses.find(vAddress => vAddress === a)) {
+      payoutUSD = basicBribeUSD * 1.25 //boostedBribe reward
+    } else if (bogusestBribe) {
       payoutUSD = bogusestBribe
     } else {
       payoutUSD = Math.max(basicBribeUSD, basicBoost, boostedBribe, boostedBonus, boostedBonanza)

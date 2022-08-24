@@ -31,8 +31,10 @@ function getHoldings(addresses, blockNumber) {
     [...addresses],
     blockNumber
   ).then(scores => {
-    console.log(scores)
-    if (!scores) return;
+    if (!scores) {
+      console.error('Unable to fetch from scores')
+      return;
+    }
     
   const holdings = {}
   for (let i = 0; i < scores.length; i++) {
